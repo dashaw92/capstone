@@ -4,17 +4,25 @@ import 'package:postgres/postgres.dart' as pg;
 
 part 'database.g.dart';
 
-//WARNING: Do not rename these constants
-enum Unit { teaspoon, gram }
-
-class PantryTable extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text().withLength(min: 1, max: 128)();
-  RealColumn get amount => real()();
-  TextColumn get unit => textEnum<Unit>()();
+/// NamesTable represents the identities of ingredients. [id] is the unique identifier for an ingredient and
+/// serves as a FK in the other tables. Name is a unique  human-readable label given to an ingredient, for instance "Powdered Ginger".
+class NamesTable extends Table {
+  IntColumn get itemId => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 128).unique()();
 }
 
-@DriftDatabase(tables: [PantryTable])
+class UpcTable extends Table {
+  IntColumn get itemId => integer().references(NamesTable, #itemId)();
+  TextColumn get upc => text().withLength(min: 1, max: 12).unique()();
+}
+
+class PantryTable extends Table {
+  IntColumn get itemId => integer().references(NamesTable, #itemId)();
+  //grams
+  RealColumn get amount => real()();
+}
+
+@DriftDatabase(tables: [NamesTable, UpcTable, PantryTable])
 class BackendDatabase extends _$BackendDatabase {
   BackendDatabase([QueryExecutor? executor])
     : super(executor ?? _openConnection());
@@ -26,7 +34,7 @@ class BackendDatabase extends _$BackendDatabase {
     return PgDatabase(
       endpoint: pg.Endpoint(
         host: 'localhost',
-        database: 'database',
+        database: 'db',
         username: 'postgres',
         password: 'password',
       ),
