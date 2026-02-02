@@ -1,123 +1,64 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
+import 'package:grpc/grpc.dart';
+import 'package:pantry_protocol/protocol.dart';
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
-import 'package:drift/drift.dart';
-import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'crud.dart';
 
-import 'database.dart';
+class PantryService extends PantryServiceBase {
+  final crud = Crud();
 
-final _db = BackendDatabase();
+  @override
+  Future<Name> createName(ServiceCall call, CreateNameRequest request) async =>
+      await crud.createName(request);
+  @override
+  Future<CreateUpcResponse> createUpc(ServiceCall call, Upc request) async =>
+      await crud.createUpc(request);
 
-// Configure routes.
-final _router = Router()
-  ..get('/api/v1/upcs', _getUPCs)
-  ..post("/api/v1/upcs", _inputUPCs)
-  ..delete('/api/v1/upcs/<upc>', _deleteUPC)
-  ..get('/api/v1/items', _getItems)
-  ..post('/api/v1/items', _inputItems)
-  ..delete('/api/v1/items/<itemId>', _deleteItem);
+  @override
+  Future<Empty> deleteName(ServiceCall call, DeleteNameRequest request) async =>
+      await crud.deleteName(request);
 
-Future<Response> _getUPCs(Request request) async {
-  final upcs = await (_db.select(_db.upcTable)).get();
-  final items = await (_db.select(_db.namesTable)).get();
-  return Response.ok(
-    json.encode({'items': items, 'upcs': upcs}),
-    headers: {'Content-type': 'application/json'},
-  );
-}
+  @override
+  Future<Empty> deleteUpc(ServiceCall call, DeleteUpcRequest request) async =>
+      await crud.deleteUpc(request);
 
-Future<Response> _inputUPCs(Request request) async {
-  final data = jsonDecode(await request.readAsString()) as Map<String, dynamic>;
+  @override
+  Future<Item> getAmount(ServiceCall call, GetAmountRequest request) async =>
+      await crud.getAmount(request);
+  @override
+  Future<ListUpcsResponse> listAllUpcs(ServiceCall call, Empty request) async =>
+      await crud.listAllUpcs();
 
-  for (var i = 0; i < data["upcs"].length && i < data["names"].length; i++) {
-    final upc = data["upcs"][i].toLowerCase();
-    final name = data["names"][i].toLowerCase();
+  @override
+  Future<ListNamesResponse> listNames(ServiceCall call, Empty request) async =>
+      await crud.listNames();
 
-    //Attempt to insert, if this fails it means the row exists.
-    try {
-      await _db
-          .into(_db.namesTable)
-          .insert(NamesTableCompanion.insert(name: name));
-    } catch (_) {}
+  @override
+  Future<ListUpcsResponse> listUpcs(
+    ServiceCall call,
+    GetUpcsRequest request,
+  ) async => await crud.listUpcs(request);
 
-    final row = await (_db.select(
-      _db.namesTable,
-    )..where((tbl) => tbl.name.lower().equals(name))).getSingle();
+  @override
+  Future<Item> resetAmount(
+    ServiceCall call,
+    ResetAmountRequest request,
+  ) async => await crud.setAmount(request.nameId, 0.0);
 
-    await _db
-        .into(_db.upcTable)
-        .insert(UpcTableCompanion.insert(itemId: row.itemId, upc: upc));
-  }
+  @override
+  Future<Item> setAmount(ServiceCall call, SetAmountRequest request) async =>
+      await crud.setAmount(request.nameId, request.amount);
 
-  return Response.ok(null);
-}
-
-Future<Response> _deleteUPC(Request request) async {
-  final upc = request.params["upc"];
-  if (upc == null) return Response.ok(null);
-  await (_db.delete(_db.upcTable)..where((tbl) => tbl.upc.equals(upc))).go();
-  return Response.ok(null);
-}
-
-Future<Response> _getItems(Request request) async {
-  final items = await (_db.select(_db.pantryTable)).get();
-  return Response.ok(
-    jsonEncode(items),
-    headers: {'Content-type': 'application/json'},
-  );
-}
-
-Future<Response> _inputItems(Request request) async {
-  final data = jsonDecode(await request.readAsString()) as List<dynamic>;
-  for (var entry in data) {
-    final itemId = entry["itemId"];
-    final amount = entry["amount"] as double;
-
-    final previous = await (_db.select(
-      _db.pantryTable,
-    )..where((tbl) => tbl.itemId.equals(itemId))).getSingleOrNull();
-
-    if (previous != null) {
-      await (_db.update(
-        _db.pantryTable,
-      )..where((tbl) => tbl.itemId.equals(itemId))).write(
-        PantryTableData(
-          itemId: itemId,
-          amount: max(0.0, previous.amount + amount),
-        ),
-      );
-    } else {
-      _db
-          .into(_db.pantryTable)
-          .insert(PantryTableCompanion.insert(itemId: itemId, amount: amount));
-    }
-  }
-  return Response.ok(null);
-}
-
-Future<Response> _deleteItem(Request request) async {
-  final itemId = int.tryParse(request.params["itemId"] ?? "");
-  if (itemId == null) return Response.ok(null);
-  await (_db.delete(
-    _db.pantryTable,
-  )..where((tbl) => tbl.itemId.equals(itemId))).go();
-  return Response.ok(null);
+  @override
+  Future<Item> updateAmount(ServiceCall call, AddAmountRequest request) async =>
+      await crud.updateAmount(request);
 }
 
 void main(List<String> args) async {
-  // Use any available host or container IP (usually `0.0.0.0`).
-  final ip = InternetAddress.anyIPv4;
-
-  // Configure a pipeline that logs requests.
-  final handler = Pipeline()
-      .addMiddleware(logRequests())
-      .addHandler(_router.call);
-
-  // For running in containers, we respect the PORT environment variable.
-  final port = int.parse(Platform.environment['PORT'] ?? '8080');
-  final server = await serve(handler, ip, port);
-  print('Server listening on port ${server.port}');
+  final server = Server.create(
+    services: [PantryService()],
+    codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
+  );
+  await server.serve(port: 8080);
+  print('Server started on port ${server.port}');
 }
