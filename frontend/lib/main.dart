@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:grpc/grpc.dart';
 
 import 'package:pantry_protocol/protocol.dart';
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
+
+final _stub = PantryServiceClient(
+  ClientChannel(
+    '192.168.40.160',
+    port: 8080,
+    options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+  ),
+);
 
 void main() {
   runApp(const MyApp());
@@ -45,6 +55,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Test gRPC Connection'),
+      ),
+      body: Stack(
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              _stub.createName(
+                CreateNameRequest(label: "Powdered Ginger"),
+              );
+            },
+            child: Text("Add next item"),
+          ),
+        ],
+      ),
+    );
   }
 }

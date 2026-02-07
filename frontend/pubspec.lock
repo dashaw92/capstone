@@ -108,7 +108,7 @@ packages:
     source: hosted
     version: "2.0.0"
   grpc:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: grpc
       sha256: "86be3a7d39ad865b214a7370021ac80e68939238b507730de6d97fc662cb2723"
@@ -211,7 +211,7 @@ packages:
     source: hosted
     version: "1.9.1"
   protobuf:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: protobuf
       sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
