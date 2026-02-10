@@ -37,10 +37,16 @@ class ConnectScreenState extends State<ConnectScreen> {
               await Prefs.setLastServer(connections[idx]);
               setState(() {});
             },
-            onLongPress: () {},
+            onLongPress: () {
+              if (Prefs.lastConnection?.id == connections[idx].id) {
+                Prefs.setLastServer(null);
+              }
+              Prefs.removeServer(connections[idx]);
+              setState(() {});
+            },
             leading: Prefs.lastConnection?.id == connections[idx].id
-                ? Icon(Icons.star, color: Colors.amberAccent)
-                : Icon(Icons.star, color: Colors.black12)
+                ? Icon(Icons.radio_button_checked, color: Theme.of(context).colorScheme.inversePrimary)
+                : Icon(Icons.radio_button_off, color: Theme.of(context).disabledColor)
           );
 
           return Container(
@@ -63,18 +69,27 @@ class ConnectScreenState extends State<ConnectScreen> {
       title: Text("New Connection"),
       content: Form(
         key: _formKey,
-        child: Column(
+        child: Wrap(
+          runSpacing: 16,
           children: [
             TextFormField(
               controller: _addressController,
               validator: (v) =>
                   v!.isEmpty ? 'Missing address/IP for connection.' : null,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Address"
+              ),
             ),
             TextFormField(
               controller: _portController,
               validator: (v) =>
                   int.tryParse(v!) == null ? 'Invalid port' : null,
               keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Port"
+              ),
             ),
           ],
         ),

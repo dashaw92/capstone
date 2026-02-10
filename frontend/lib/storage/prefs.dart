@@ -39,9 +39,11 @@ class Prefs {
     await _updateConnections();
   }
 
-  static Future setLastServer(StoredConnection connection) async {
+  static Future setLastServer(StoredConnection? connection) async {
     _lastConnection = connection;
-    await _prefs.setString(_Keys.lastConnection, _lastConnection!.id);
+    await (connection == null
+        ? _prefs.remove(_Keys.lastConnection)
+        : _prefs.setString(_Keys.lastConnection, connection.id));
   }
 
   static int get numConnections => _connections.length;
