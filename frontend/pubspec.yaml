@@ -30,11 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   grpc: ^5.1.0
   pantry_protocol:
     path: ../protocol
   protobuf: ^6.0.0
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
