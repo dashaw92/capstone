@@ -4,24 +4,16 @@ import 'package:frontend/ui/ui.dart';
 
 import 'package:pantry_protocol/protocol.dart';
 
-// final _stub = PantryServiceClient(
-//   ClientChannel(
-//     '192.168.40.160',
-//     port: 8080,
-//     options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-//   ),
-// );
-
 class Routes {
   Routes._();
 
   static const String home = '/';
-  static const String connect = '/connect';
+  static const String established = '/established';
 }
 
 final Map<String, WidgetBuilder> _routes = {
-  Routes.home: (_) => const HomeScreen(),
-  Routes.connect: (_) => ConnectScreen(),
+  Routes.home: (_) => const ConnectScreen(),
+  Routes.established: (_) => const EstablishedConnectionScreen(),
 };
 
 void main() async {

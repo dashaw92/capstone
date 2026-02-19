@@ -238,3 +238,15 @@ const ResetAmountRequest$json = {
 final $typed_data.Uint8List resetAmountRequestDescriptor =
     $convert.base64Decode(
         'ChJSZXNldEFtb3VudFJlcXVlc3QSFgoGbmFtZUlkGAEgASgFUgZuYW1lSWQ=');
+
+@$core.Deprecated('Use pongDescriptor instead')
+const Pong$json = {
+  '1': 'Pong',
+  '2': [
+    {'1': 'response', '3': 1, '4': 1, '5': 9, '10': 'response'},
+  ],
+};
+
+/// Descriptor for `Pong`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pongDescriptor =
+    $convert.base64Decode('CgRQb25nEhoKCHJlc3BvbnNlGAEgASgJUghyZXNwb25zZQ==');

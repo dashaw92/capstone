@@ -94,6 +94,10 @@ message ResetAmountRequest {
   int32 nameId = 1;
 }
 
+message Pong {
+  string response = 1;
+}
+
 service PantryService {
   rpc CreateUpc(Upc) returns (CreateUpcResponse);
   rpc ListUpcs(GetUpcsRequest) returns (ListUpcsResponse);
@@ -108,4 +112,6 @@ service PantryService {
   rpc UpdateAmount(AddAmountRequest) returns (Item);
   rpc SetAmount(SetAmountRequest) returns (Item);
   rpc ResetAmount(ResetAmountRequest) returns (Item);
+
+  rpc Ping(google.protobuf.Empty) returns (Pong);
 }

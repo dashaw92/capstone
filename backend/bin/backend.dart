@@ -52,12 +52,27 @@ class PantryService extends PantryServiceBase {
   @override
   Future<Item> updateAmount(ServiceCall call, AddAmountRequest request) async =>
       await crud.updateAmount(request);
+
+  @override
+  Future<Pong> ping(ServiceCall call, Empty request) async => await crud.ping();
+}
+
+Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
+  final time = DateTime.now();
+  final client = call.clientMetadata ?? {};
+  final method = client[":method"];
+  final name = client[":path"];
+  final remote = call.remoteAddress?.address;
+
+  print("[$time] $remote => $method $name");
+  return null;
 }
 
 void main(List<String> args) async {
   final server = Server.create(
     services: [PantryService()],
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
+    interceptors: [logging],
   );
   await server.serve(port: 8080);
   print('Server started on port ${server.port}');

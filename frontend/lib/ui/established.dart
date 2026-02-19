@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class EstablishedConnectionScreen extends StatelessWidget {
+  const EstablishedConnectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Home")),
+      appBar: AppBar(title: const Text("Connected")),
       drawer: NavDrawer(),
     );
   }
@@ -44,10 +44,7 @@ class NavDrawer extends StatelessWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.router),
-          title: const Text('Connect'),
-          onTap: () {
-            Navigator.pushNamed(context, Routes.connect);
-          },
+          title: const Text('Foo'),
         ),
       ],
     ),

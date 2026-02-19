@@ -965,6 +965,60 @@ class ResetAmountRequest extends $pb.GeneratedMessage {
   void clearNameId() => $_clearField(1);
 }
 
+class Pong extends $pb.GeneratedMessage {
+  factory Pong({
+    $core.String? response,
+  }) {
+    final result = create();
+    if (response != null) result.response = response;
+    return result;
+  }
+
+  Pong._();
+
+  factory Pong.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Pong.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Pong',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'response')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Pong clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Pong copyWith(void Function(Pong) updates) =>
+      super.copyWith((message) => updates(message as Pong)) as Pong;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Pong create() => Pong._();
+  @$core.override
+  Pong createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static Pong getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Pong>(create);
+  static Pong? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get response => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set response($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasResponse() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearResponse() => $_clearField(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

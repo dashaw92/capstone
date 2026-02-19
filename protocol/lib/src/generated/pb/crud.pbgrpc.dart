@@ -110,6 +110,13 @@ class PantryServiceClient extends $grpc.Client {
     return $createUnaryCall(_$resetAmount, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.Pong> ping(
+    $1.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$ping, request, options: options);
+  }
+
   // method descriptors
 
   static final _$createUpc = $grpc.ClientMethod<$0.Upc, $0.CreateUpcResponse>(
@@ -161,6 +168,10 @@ class PantryServiceClient extends $grpc.Client {
           '/pantry_protocol.PantryService/ResetAmount',
           ($0.ResetAmountRequest value) => value.writeToBuffer(),
           $0.Item.fromBuffer);
+  static final _$ping = $grpc.ClientMethod<$1.Empty, $0.Pong>(
+      '/pantry_protocol.PantryService/Ping',
+      ($1.Empty value) => value.writeToBuffer(),
+      $0.Pong.fromBuffer);
 }
 
 @$pb.GrpcServiceName('pantry_protocol.PantryService')
@@ -246,6 +257,13 @@ abstract class PantryServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.ResetAmountRequest.fromBuffer(value),
         ($0.Item value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.Empty, $0.Pong>(
+        'Ping',
+        ping_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
+        ($0.Pong value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CreateUpcResponse> createUpc_Pre(
@@ -335,4 +353,11 @@ abstract class PantryServiceBase extends $grpc.Service {
 
   $async.Future<$0.Item> resetAmount(
       $grpc.ServiceCall call, $0.ResetAmountRequest request);
+
+  $async.Future<$0.Pong> ping_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
+    return ping($call, await $request);
+  }
+
+  $async.Future<$0.Pong> ping($grpc.ServiceCall call, $1.Empty request);
 }

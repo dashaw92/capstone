@@ -116,4 +116,8 @@ final class Crud {
     final r = await _getPantryItem(request.nameId);
     return setAmount(r.itemId, r.amount + request.amount);
   }
+
+  Future<Pong> ping() async {
+    return Pong(response: "ok");
+  }
 }

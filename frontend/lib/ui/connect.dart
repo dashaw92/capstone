@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/main.dart';
+import 'package:frontend/net/connection.dart';
 import 'package:frontend/storage/prefs.dart';
 
 class ConnectScreen extends StatefulWidget {
@@ -12,6 +14,7 @@ class ConnectScreenState extends State<ConnectScreen> {
   final _formKey = GlobalKey<FormState>();
   final _addressController = TextEditingController();
   final _portController = TextEditingController();
+  String? _selectedServer = Prefs.lastConnection?.id;
 
   @override
   void dispose() {
@@ -26,33 +29,57 @@ class ConnectScreenState extends State<ConnectScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Connect")),
-      body: ListView.builder(
-        itemCount: Prefs.numConnections,
-        padding: EdgeInsets.all(16),
-        itemBuilder: (context, idx) {
-          final tile = ListTile(
-            title: Text(connections[idx].id),
-            onTap: () async {
-              if (Prefs.lastConnection?.id == connections[idx].id) return;
-              await Prefs.setLastServer(connections[idx]);
-              setState(() {});
+      body: Wrap(
+        children: [
+          DropdownMenu<String>(
+            initialSelection: Prefs.lastConnection?.id,
+            dropdownMenuEntries: [
+              for (var i = 0; i < connections.length; i++)
+                DropdownMenuEntry<String>(
+                  value: connections[i].id,
+                  label: connections[i].id,
+                ),
+            ],
+            onSelected: (String? id) {
+              _selectedServer = id;
             },
-            onLongPress: () {
-              if (Prefs.lastConnection?.id == connections[idx].id) {
+          ),
+          ElevatedButton(
+            child: const Text("Connect"),
+            onPressed: () async {
+              if (_selectedServer != null) {
+                final connected = await Connection.tryConnect(
+                  StoredConnection.fromId(_selectedServer!),
+                );
+                if (!context.mounted) return;
+                if (connected) {
+                  Navigator.pushNamed(context, Routes.established);
+                  return;
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Center(
+                      child: Text("Failed to connect to server!"),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_selectedServer == null) return;
+              if (Prefs.lastConnection?.id == _selectedServer) {
                 Prefs.setLastServer(null);
               }
-              Prefs.removeServer(connections[idx]);
+              Prefs.removeServer(StoredConnection.fromId(_selectedServer!));
+              _selectedServer = null;
               setState(() {});
             },
-            leading: Prefs.lastConnection?.id == connections[idx].id
-                ? Icon(Icons.radio_button_checked, color: Theme.of(context).colorScheme.inversePrimary)
-                : Icon(Icons.radio_button_off, color: Theme.of(context).disabledColor)
-          );
-
-          return Container(
-            child: tile,
-          );
-        },
+            child: const Text("Delete"),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
@@ -78,7 +105,7 @@ class ConnectScreenState extends State<ConnectScreen> {
                   v!.isEmpty ? 'Missing address/IP for connection.' : null,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "Address"
+                labelText: "Address",
               ),
             ),
             TextFormField(
@@ -87,8 +114,8 @@ class ConnectScreenState extends State<ConnectScreen> {
                   int.tryParse(v!) == null ? 'Invalid port' : null,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Port"
+                border: OutlineInputBorder(),
+                labelText: "Port",
               ),
             ),
           ],
@@ -106,6 +133,9 @@ class ConnectScreenState extends State<ConnectScreen> {
                 address: _addressController.text,
                 port: int.parse(_portController.text),
               );
+              _addressController.clear();
+              _portController.clear();
+              _selectedServer = connection.id;
               Prefs.addServer(connection);
               Prefs.setLastServer(connection);
               Navigator.pop(context);
