@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/net/connection.dart';
 import 'package:pantry_protocol/protocol.dart';
 
+import '../main.dart';
+
 class IngredientsScreen extends StatefulWidget {
   const IngredientsScreen({super.key});
 
@@ -12,48 +14,50 @@ class IngredientsScreen extends StatefulWidget {
 class _IngredientsState extends State<IngredientsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _amountController = TextEditingController();
 
-  late Future<ListNamesResponse> _names;
+  late Future<ListIngredientsResponse> _ingredients;
 
   @override
   void initState() {
     super.initState();
-    _names = Connection.conn!.listNames(empty);
+    _ingredients = Connection.conn!.listIngredients(empty);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text("Ingredients")),
     body: Flex(
       direction: Axis.vertical,
       children: [
         Flexible(
           child: FutureBuilder(
-            future: _names,
+            future: _ingredients,
             builder: (context, state) {
               if (state.hasData) {
                 return ListView.builder(
-                  itemCount: state.data!.names.length,
+                  itemCount: state.data!.ingredients.length,
                   itemBuilder: (context, idx) {
-                    final name = state.data!.names[idx];
+                    final item = state.data!.ingredients[idx];
                     return Row(
                       children: [
                         Flexible(
                           child: ListTile(
-                            leading: Text(name.id.toString()),
-                            title: Text(name.label),
+                            leading: Text(item.id.toString()),
+                            title: Text(item.label),
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () {},
-                          child: Icon(Icons.add_a_photo),
+                          onPressed: () => _setAmountDialog(item.amount),
+                          child: Icon(Icons.numbers),
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            await Connection.conn!.deleteName(
-                              DeleteNameRequest(nameId: name.id),
+                            await Connection.conn!.deleteIngredient(
+                              DeleteIngredientRequest(id: item.id),
                             );
                             setState(() {
-                              _names = Connection.conn!.listNames(empty);
+                              _ingredients = Connection.conn!.listIngredients(empty);
                             });
                           },
                           child: Icon(Icons.delete_forever),
@@ -79,16 +83,18 @@ class _IngredientsState extends State<IngredientsScreen> {
 
   void _submit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await Connection.conn!.createName(
-        CreateNameRequest(label: _nameController.text),
+      final name = await Connection.conn!.createIngredient(
+        CreateIngredientRequest(label: _nameController.text, amount: double.tryParse(_amountController.text) ?? 0.0),
       );
+
       _nameController.clear();
+      _amountController.clear();
 
       if (context.mounted) {
         Navigator.pop(context);
       }
       setState(() {
-        _names = Connection.conn!.listNames(empty);
+        _ingredients = Connection.conn!.listIngredients(empty);
       });
     }
   }
@@ -112,6 +118,21 @@ class _IngredientsState extends State<IngredientsScreen> {
               keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.words,
               autofocus: true,
+              textInputAction: TextInputAction.next,
+            ),
+            TextFormField(
+              controller: _amountController,
+              validator: (v) {
+                if (v == null || v.isEmpty) return "Amount must not be empty";
+                final parsed = double.tryParse(v);
+                if (parsed == null || parsed < 0.0) return "Invalid amount";
+                return null;
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Amount (grams)",
+              ),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               onFieldSubmitted: (_) => _submit(context),
             ),
           ],
@@ -122,8 +143,17 @@ class _IngredientsState extends State<IngredientsScreen> {
           onPressed: () => Navigator.pop(context),
           child: const Text("Cancel"),
         ),
-        ElevatedButton(onPressed: () => _submit(context), child: const Text("Submit")),
+        ElevatedButton(
+          onPressed: () => _submit(context),
+          child: const Text("Submit"),
+        ),
       ],
     ),
   );
+
+  Future _setAmountDialog(double amount) {
+    return showDialog(context: context, builder: (context) {
+      return Center(child: Text("Currently have $amount"));
+    });
+  }
 }

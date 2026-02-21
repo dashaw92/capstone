@@ -42,6 +42,9 @@ class ConnectScreenState extends State<ConnectScreen> {
             ],
             onSelected: (String? id) {
               _selectedServer = id;
+              if (id != null) {
+                Prefs.setLastServer(StoredConnection.fromId(id));
+              }
             },
           ),
           ElevatedButton(

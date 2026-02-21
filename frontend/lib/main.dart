@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/storage/prefs.dart';
 import 'package:frontend/ui/ui.dart';
 
-import 'package:pantry_protocol/protocol.dart';
-
 class Routes {
   Routes._();
 

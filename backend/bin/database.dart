@@ -4,25 +4,13 @@ import 'package:postgres/postgres.dart' as pg;
 
 part 'database.g.dart';
 
-/// NamesTable represents the identities of ingredients. [id] is the unique identifier for an ingredient and
-/// serves as a FK in the other tables. Name is a unique  human-readable label given to an ingredient, for instance "Powdered Ginger".
-class NamesTable extends Table {
-  IntColumn get itemId => integer().autoIncrement()();
+class IngredientsTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 1, max: 128).unique()();
-}
-
-class UpcTable extends Table {
-  IntColumn get itemId => integer().references(NamesTable, #itemId)();
-  TextColumn get upc => text().withLength(min: 1, max: 12).unique()();
-}
-
-class PantryTable extends Table {
-  IntColumn get itemId => integer().references(NamesTable, #itemId)();
-  //grams
   RealColumn get amount => real()();
 }
 
-@DriftDatabase(tables: [NamesTable, UpcTable, PantryTable])
+@DriftDatabase(tables: [IngredientsTable])
 class BackendDatabase extends _$BackendDatabase {
   BackendDatabase([QueryExecutor? executor])
     : super(executor ?? _openConnection());

@@ -10,31 +10,36 @@ import 'database.dart';
 final class Crud {
   final _db = BackendDatabase();
 
-  Future<Name> getNameById(int id) async {
-    NamesTableData? r = await (_db.select(
-      _db.namesTable,
-    )..where((tbl) => tbl.itemId.equals(id))).getSingleOrNull();
+  Future<Ingredient> getIngredientById(int id) async {
+    IngredientsTableData? r = await (_db.select(
+      _db.ingredientsTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
 
-    return Name(id: r?.itemId, label: r?.name);
+    return Ingredient(id: r?.id, label: r?.name);
   }
 
-  Future<Name> getName(String label) async {
-    NamesTableData? r =
-        await (_db.select(_db.namesTable)
+  Future<Ingredient> getIngredient(String label) async {
+    IngredientsTableData? r =
+        await (_db.select(_db.ingredientsTable)
               ..where((tbl) => tbl.name.lower().equals(label.toLowerCase())))
             .getSingleOrNull();
 
-    return Name(id: r?.itemId, label: r?.name);
+    return Ingredient(id: r?.id, label: r?.name);
   }
 
-  Future<Name> createName(CreateNameRequest request) async {
-    NamesTableData? r = await _db
-        .into(_db.namesTable)
-        .insertReturningOrNull(NamesTableCompanion.insert(name: request.label));
+  Future<Ingredient> createIngredient(CreateIngredientRequest request) async {
+    IngredientsTableData? r = await _db
+        .into(_db.ingredientsTable)
+        .insertReturningOrNull(
+          IngredientsTableCompanion.insert(
+            name: request.label,
+            amount: request.amount,
+          ),
+        );
 
     if (r == null) {
       final old =
-          await (_db.select(_db.namesTable)..where(
+          await (_db.select(_db.ingredientsTable)..where(
                 (tbl) => tbl.name.lower().equals(request.label.toLowerCase()),
               ))
               .getSingleOrNull();
@@ -42,82 +47,53 @@ final class Crud {
       r = old;
     }
 
-    return Name(id: r?.itemId, label: r?.name);
+    return Ingredient(id: r?.id, label: r?.name);
   }
 
-  Future<CreateUpcResponse> createUpc(Upc request) async {
-    UpcTableData? r = await _db
-        .into(_db.upcTable)
-        .insertReturningOrNull(
-          UpcTableCompanion.insert(itemId: request.nameId, upc: request.upc),
-        );
+  Future<Empty> deleteIngredient(DeleteIngredientRequest request) async {
+    await (_db.delete(
+      _db.ingredientsTable,
+    )..where((tbl) => tbl.id.equals(request.id))).go();
+    return Empty();
+  }
 
-    return CreateUpcResponse(
-      upc: Upc(upc: r?.upc, nameId: r?.itemId),
+  Future<ListIngredientsResponse> listIngredients() async {
+    final rows = await _db.select(_db.ingredientsTable).get();
+    final items = rows.map(
+      (r) => Ingredient(id: r.id, label: r.name, amount: r.amount),
     );
+    return ListIngredientsResponse(ingredients: items);
   }
 
-  Future<Empty> deleteName(DeleteNameRequest request) async {
-    await (_db.delete(
-      _db.namesTable,
-    )..where((tbl) => tbl.itemId.equals(request.nameId))).go();
-    return Empty();
+  Future<IngredientsTableData> _getPantryIngredient(int nameId) async =>
+      await (_db.select(
+        _db.ingredientsTable,
+      )..where((tbl) => tbl.id.equals(nameId))).getSingle();
+
+  Future<Ingredient> setAmount(int nameId, double amount) async {
+    await (_db.update(_db.ingredientsTable)
+          ..where((tbl) => tbl.id.equals(nameId)))
+        .write(IngredientsTableCompanion(amount: Value(amount)));
+    final r = await _getPantryIngredient(nameId);
+
+    return Ingredient(id: r.id, label: r.name, amount: r.amount);
   }
 
-  Future<Empty> deleteUpc(DeleteUpcRequest request) async {
-    await (_db.delete(
-      _db.upcTable,
-    )..where((tbl) => tbl.upc.lower().equals(request.upc.toLowerCase()))).go();
-    return Empty();
-  }
-
-  Future<Item> getAmount(GetAmountRequest request) async {
-    PantryTableData? r = await (_db.select(
-      _db.pantryTable,
-    )..where((tbl) => tbl.itemId.equals(request.nameId))).getSingleOrNull();
-
-    return Item(nameId: r?.itemId, amount: r?.amount);
-  }
-
-  Future<ListUpcsResponse> listAllUpcs() async {
-    final upcRows = await (_db.select(_db.upcTable)).get();
-    final upcs = upcRows.map((row) => Upc(upc: row.upc, nameId: row.itemId));
-    return ListUpcsResponse(upcs: upcs);
-  }
-
-  Future<ListNamesResponse> listNames() async {
-    final nameRows = await (_db.select(_db.namesTable)).get();
-    final names = nameRows.map((row) => Name(id: row.itemId, label: row.name));
-    return ListNamesResponse(names: names);
-  }
-
-  Future<ListUpcsResponse> listUpcs(GetUpcsRequest request) async {
-    final upcRows = await (_db.select(
-      _db.upcTable,
-    )..where((tbl) => tbl.itemId.equals(request.nameId))).get();
-    final upcs = upcRows.map((row) => Upc(upc: row.upc, nameId: row.itemId));
-    return ListUpcsResponse(upcs: upcs);
-  }
-
-  Future<PantryTableData> _getPantryItem(int nameId) async => await (_db.select(
-    _db.pantryTable,
-  )..where((tbl) => tbl.itemId.equals(nameId))).getSingle();
-
-  Future<Item> setAmount(int nameId, double amount) async {
-    await (_db.update(_db.pantryTable)
-          ..where((tbl) => tbl.itemId.equals(nameId)))
-        .write(PantryTableCompanion.insert(itemId: nameId, amount: amount));
-
-    final r = await _getPantryItem(nameId);
-    return Item(nameId: r.itemId, amount: r.amount);
-  }
-
-  Future<Item> updateAmount(AddAmountRequest request) async {
-    final r = await _getPantryItem(request.nameId);
-    return setAmount(r.itemId, r.amount + request.amount);
+  Future<Ingredient> updateAmount(UpdateIngredientRequest request) async {
+    final r = await _getPantryIngredient(request.id);
+    return setAmount(r.id, request.amount);
   }
 
   Future<Pong> ping() async {
     return Pong(response: "ok");
+  }
+
+  Future<Ingredient> renameIngredient(RenameIngredientRequest request) async {
+    await (_db.update(_db.ingredientsTable)
+          ..where((tbl) => tbl.id.equals(request.id)))
+        .write(IngredientsTableCompanion(name: Value(request.newLabel)));
+
+    final r = await _getPantryIngredient(request.id);
+    return Ingredient(id: r.id, label: r.name, amount: r.amount);
   }
 }

@@ -8,53 +8,37 @@ class PantryService extends PantryServiceBase {
   final crud = Crud();
 
   @override
-  Future<Name> createName(ServiceCall call, CreateNameRequest request) async =>
-      await crud.createName(request);
-  @override
-  Future<CreateUpcResponse> createUpc(ServiceCall call, Upc request) async =>
-      await crud.createUpc(request);
-
-  @override
-  Future<Empty> deleteName(ServiceCall call, DeleteNameRequest request) async =>
-      await crud.deleteName(request);
-
-  @override
-  Future<Empty> deleteUpc(ServiceCall call, DeleteUpcRequest request) async =>
-      await crud.deleteUpc(request);
-
-  @override
-  Future<Item> getAmount(ServiceCall call, GetAmountRequest request) async =>
-      await crud.getAmount(request);
-  @override
-  Future<ListUpcsResponse> listAllUpcs(ServiceCall call, Empty request) async =>
-      await crud.listAllUpcs();
-
-  @override
-  Future<ListNamesResponse> listNames(ServiceCall call, Empty request) async =>
-      await crud.listNames();
-
-  @override
-  Future<ListUpcsResponse> listUpcs(
+  Future<Ingredient> createIngredient(
     ServiceCall call,
-    GetUpcsRequest request,
-  ) async => await crud.listUpcs(request);
+    CreateIngredientRequest request,
+  ) async => await crud.createIngredient(request);
 
   @override
-  Future<Item> resetAmount(
+  Future<Empty> deleteIngredient(
     ServiceCall call,
-    ResetAmountRequest request,
-  ) async => await crud.setAmount(request.nameId, 0.0);
+    DeleteIngredientRequest request,
+  ) async => await crud.deleteIngredient(request);
 
   @override
-  Future<Item> setAmount(ServiceCall call, SetAmountRequest request) async =>
-      await crud.setAmount(request.nameId, request.amount);
-
-  @override
-  Future<Item> updateAmount(ServiceCall call, AddAmountRequest request) async =>
-      await crud.updateAmount(request);
+  Future<ListIngredientsResponse> listIngredients(
+    ServiceCall call,
+    Empty request,
+  ) async => await crud.listIngredients();
 
   @override
   Future<Pong> ping(ServiceCall call, Empty request) async => await crud.ping();
+
+  @override
+  Future<Ingredient> renameIngredient(
+    ServiceCall call,
+    RenameIngredientRequest request,
+  ) async => await crud.renameIngredient(request);
+
+  @override
+  Future<Ingredient> updateIngredient(
+    ServiceCall call,
+    UpdateIngredientRequest request,
+  ) async => await crud.updateAmount(request);
 }
 
 Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
