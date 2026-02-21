@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_zxing: ^2.2.1
   grpc: ^5.1.0
   pantry_protocol:
     path: ../protocol

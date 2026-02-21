@@ -32,7 +32,7 @@ class ConnectScreenState extends State<ConnectScreen> {
       body: Wrap(
         children: [
           DropdownMenu<String>(
-            initialSelection: Prefs.lastConnection?.id,
+            initialSelection: _selectedServer,
             dropdownMenuEntries: [
               for (var i = 0; i < connections.length; i++)
                 DropdownMenuEntry<String>(
@@ -74,7 +74,7 @@ class ConnectScreenState extends State<ConnectScreen> {
                 Prefs.setLastServer(null);
               }
               Prefs.removeServer(StoredConnection.fromId(_selectedServer!));
-              _selectedServer = null;
+              _selectedServer = connections.firstOrNull?.id;
               setState(() {});
             },
             child: const Text("Delete"),
@@ -90,6 +90,22 @@ class ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
+  void _submit() {
+      if (_formKey.currentState!.validate()) {
+        final connection = StoredConnection(
+          address: _addressController.text,
+          port: int.parse(_portController.text),
+        );
+        _addressController.clear();
+        _portController.clear();
+        _selectedServer = connection.id;
+        Prefs.addServer(connection);
+        Prefs.setLastServer(connection);
+        Navigator.pop(context);
+        setState(() {});
+      }
+  }
+
   Future _addConnectionDialog() => showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -102,11 +118,13 @@ class ConnectScreenState extends State<ConnectScreen> {
             TextFormField(
               controller: _addressController,
               validator: (v) =>
-                  v!.isEmpty ? 'Missing address/IP for connection.' : null,
+                  v!.isEmpty ? 'Invalid address/IP' : null,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Address",
               ),
+              autofocus: true,
+              textInputAction: TextInputAction.next,
             ),
             TextFormField(
               controller: _portController,
@@ -117,6 +135,8 @@ class ConnectScreenState extends State<ConnectScreen> {
                 border: OutlineInputBorder(),
                 labelText: "Port",
               ),
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _submit(),
             ),
           ],
         ),
@@ -127,21 +147,7 @@ class ConnectScreenState extends State<ConnectScreen> {
           child: const Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              final connection = StoredConnection(
-                address: _addressController.text,
-                port: int.parse(_portController.text),
-              );
-              _addressController.clear();
-              _portController.clear();
-              _selectedServer = connection.id;
-              Prefs.addServer(connection);
-              Prefs.setLastServer(connection);
-              Navigator.pop(context);
-              setState(() {});
-            }
-          },
+          onPressed: _submit,
           child: const Text("Submit"),
         ),
       ],

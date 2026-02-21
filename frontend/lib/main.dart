@@ -9,11 +9,13 @@ class Routes {
 
   static const String home = '/';
   static const String established = '/established';
+  static const String ingredients = '/established/ingredients';
 }
 
 final Map<String, WidgetBuilder> _routes = {
   Routes.home: (_) => const ConnectScreen(),
   Routes.established: (_) => const EstablishedConnectionScreen(),
+  Routes.ingredients: (_) => const IngredientsScreen(),
 };
 
 void main() async {

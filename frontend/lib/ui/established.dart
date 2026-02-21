@@ -43,8 +43,11 @@ class NavDrawer extends StatelessWidget {
       runSpacing: 16,
       children: [
         ListTile(
-          leading: const Icon(Icons.router),
-          title: const Text('Foo'),
+          leading: const Icon(Icons.list),
+          title: const Text('Ingredients'),
+          onTap: () {
+            Navigator.pushNamed(context, Routes.ingredients);
+          },
         ),
       ],
     ),
