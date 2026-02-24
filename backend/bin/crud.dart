@@ -96,4 +96,66 @@ final class Crud {
     final r = await _getPantryIngredient(request.id);
     return Ingredient(id: r.id, label: r.name, amount: r.amount);
   }
+
+  Future<ExtractorsTableData> _getExtractor(int id) async => await (_db.select(
+    _db.extractorsTable,
+  )..where((tbl) => tbl.id.equals(id))).getSingle();
+
+  Future<Extractor> getExtractor(int id) async {
+    final r = await _getExtractor(id);
+    return Extractor(id: r.id, label: r.label, script: r.script);
+  }
+
+  Future<Extractor> createExtractor(CreateExtractorRequest request) async {
+    ExtractorsTableData? r = await _db
+        .into(_db.extractorsTable)
+        .insertReturningOrNull(
+          ExtractorsTableCompanion.insert(
+            label: request.label,
+            script: request.script,
+          ),
+        );
+
+    if (r == null) {
+      final old =
+          await (_db.select(_db.extractorsTable)..where(
+                (tbl) => tbl.label.lower().equals(request.label.toLowerCase()),
+              ))
+              .getSingleOrNull();
+
+      r = old;
+    }
+
+    return Extractor(id: r?.id, label: r?.label, script: r?.script);
+  }
+
+  Future<Empty> deleteExtractor(DeleteExtractorRequest request) async {
+    await (_db.delete(
+      _db.extractorsTable,
+    )..where((tbl) => tbl.id.equals(request.id))).go();
+    return Empty();
+  }
+
+  Future<ListExtractorsResponse> listExtractors() async {
+    final rows = await _db.select(_db.extractorsTable).get();
+    final items = rows.map(
+      (r) => Extractor(id: r.id, label: r.label, script: r.script),
+    );
+    return ListExtractorsResponse(extractors: items);
+  }
+
+  Future<Extractor> updateExtractor(UpdateExtractorRequest request) async {
+    await (_db.update(
+      _db.extractorsTable,
+    )..where((tbl) => tbl.id.equals(request.id))).write(
+      ExtractorsTableCompanion(
+        id: Value(request.id),
+        label: Value.absentIfNull(request.hasLabel() ? request.label : null),
+        script: Value.absentIfNull(request.hasScript() ? request.script : null),
+      ),
+    );
+
+    final r = await _getExtractor(request.id);
+    return Extractor(id: r.id, label: r.label, script: r.script);
+  }
 }

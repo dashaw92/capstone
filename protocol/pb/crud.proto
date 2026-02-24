@@ -45,6 +45,35 @@ message RenameIngredientRequest {
   string newLabel = 2;
 }
 
+message Extractor {
+  int32 id = 1;
+  string label = 2;
+  string script = 3;
+}
+
+message CreateExtractorRequest {
+  string label = 1;
+  string script = 2;
+}
+
+message UpdateExtractorRequest {
+  int32 id = 1;
+  optional string label = 2;
+  optional string script = 3;
+}
+
+message ListExtractorsResponse {
+  repeated Extractor extractors = 1;
+}
+
+message GetExtractorRequest {
+  int32 id = 1;
+}
+
+message DeleteExtractorRequest {
+  int32 id = 1;
+}
+
 message Pong {
   string response = 1;
 }
@@ -55,6 +84,12 @@ service PantryService {
   rpc UpdateIngredient(UpdateIngredientRequest) returns (Ingredient);
   rpc RenameIngredient(RenameIngredientRequest) returns (Ingredient);
   rpc DeleteIngredient(DeleteIngredientRequest) returns (google.protobuf.Empty);
+
+  rpc CreateExtractor(CreateExtractorRequest) returns (Extractor);
+  rpc UpdateExtractor(UpdateExtractorRequest) returns (Extractor);
+  rpc ListExtractors(google.protobuf.Empty) returns (ListExtractorsResponse);
+  rpc GetExtractor(GetExtractorRequest) returns (Extractor);
+  rpc DeleteExtractor(DeleteExtractorRequest) returns (google.protobuf.Empty);
 
   rpc Ping(google.protobuf.Empty) returns (Pong);
 }

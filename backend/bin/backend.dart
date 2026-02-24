@@ -39,6 +39,36 @@ class PantryService extends PantryServiceBase {
     ServiceCall call,
     UpdateIngredientRequest request,
   ) async => await crud.updateAmount(request);
+
+  @override
+  Future<Extractor> createExtractor(
+    ServiceCall call,
+    CreateExtractorRequest request,
+  ) async => await crud.createExtractor(request);
+
+  @override
+  Future<Empty> deleteExtractor(
+    ServiceCall call,
+    DeleteExtractorRequest request,
+  ) async => await crud.deleteExtractor(request);
+
+  @override
+  Future<ListExtractorsResponse> listExtractors(
+    ServiceCall call,
+    Empty request,
+  ) async => await crud.listExtractors();
+
+  @override
+  Future<Extractor> updateExtractor(
+    ServiceCall call,
+    UpdateExtractorRequest request,
+  ) async => await crud.updateExtractor(request);
+
+  @override
+  Future<Extractor> getExtractor(
+    ServiceCall call,
+    GetExtractorRequest request,
+  ) async => await crud.getExtractor(request.id);
 }
 
 Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {

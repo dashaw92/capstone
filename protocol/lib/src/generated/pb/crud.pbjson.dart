@@ -123,6 +123,101 @@ final $typed_data.Uint8List renameIngredientRequestDescriptor =
         'ChdSZW5hbWVJbmdyZWRpZW50UmVxdWVzdBIOCgJpZBgBIAEoBVICaWQSGgoIbmV3TGFiZWwYAi'
         'ABKAlSCG5ld0xhYmVs');
 
+@$core.Deprecated('Use extractorDescriptor instead')
+const Extractor$json = {
+  '1': 'Extractor',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    {'1': 'label', '3': 2, '4': 1, '5': 9, '10': 'label'},
+    {'1': 'script', '3': 3, '4': 1, '5': 9, '10': 'script'},
+  ],
+};
+
+/// Descriptor for `Extractor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List extractorDescriptor = $convert.base64Decode(
+    'CglFeHRyYWN0b3ISDgoCaWQYASABKAVSAmlkEhQKBWxhYmVsGAIgASgJUgVsYWJlbBIWCgZzY3'
+    'JpcHQYAyABKAlSBnNjcmlwdA==');
+
+@$core.Deprecated('Use createExtractorRequestDescriptor instead')
+const CreateExtractorRequest$json = {
+  '1': 'CreateExtractorRequest',
+  '2': [
+    {'1': 'label', '3': 1, '4': 1, '5': 9, '10': 'label'},
+    {'1': 'script', '3': 2, '4': 1, '5': 9, '10': 'script'},
+  ],
+};
+
+/// Descriptor for `CreateExtractorRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createExtractorRequestDescriptor =
+    $convert.base64Decode(
+        'ChZDcmVhdGVFeHRyYWN0b3JSZXF1ZXN0EhQKBWxhYmVsGAEgASgJUgVsYWJlbBIWCgZzY3JpcH'
+        'QYAiABKAlSBnNjcmlwdA==');
+
+@$core.Deprecated('Use updateExtractorRequestDescriptor instead')
+const UpdateExtractorRequest$json = {
+  '1': 'UpdateExtractorRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    {'1': 'label', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'label', '17': true},
+    {'1': 'script', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'script', '17': true},
+  ],
+  '8': [
+    {'1': '_label'},
+    {'1': '_script'},
+  ],
+};
+
+/// Descriptor for `UpdateExtractorRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateExtractorRequestDescriptor = $convert.base64Decode(
+    'ChZVcGRhdGVFeHRyYWN0b3JSZXF1ZXN0Eg4KAmlkGAEgASgFUgJpZBIZCgVsYWJlbBgCIAEoCU'
+    'gAUgVsYWJlbIgBARIbCgZzY3JpcHQYAyABKAlIAVIGc2NyaXB0iAEBQggKBl9sYWJlbEIJCgdf'
+    'c2NyaXB0');
+
+@$core.Deprecated('Use listExtractorsResponseDescriptor instead')
+const ListExtractorsResponse$json = {
+  '1': 'ListExtractorsResponse',
+  '2': [
+    {
+      '1': 'extractors',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.pantry_protocol.Extractor',
+      '10': 'extractors'
+    },
+  ],
+};
+
+/// Descriptor for `ListExtractorsResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listExtractorsResponseDescriptor =
+    $convert.base64Decode(
+        'ChZMaXN0RXh0cmFjdG9yc1Jlc3BvbnNlEjoKCmV4dHJhY3RvcnMYASADKAsyGi5wYW50cnlfcH'
+        'JvdG9jb2wuRXh0cmFjdG9yUgpleHRyYWN0b3Jz');
+
+@$core.Deprecated('Use getExtractorRequestDescriptor instead')
+const GetExtractorRequest$json = {
+  '1': 'GetExtractorRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `GetExtractorRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getExtractorRequestDescriptor = $convert
+    .base64Decode('ChNHZXRFeHRyYWN0b3JSZXF1ZXN0Eg4KAmlkGAEgASgFUgJpZA==');
+
+@$core.Deprecated('Use deleteExtractorRequestDescriptor instead')
+const DeleteExtractorRequest$json = {
+  '1': 'DeleteExtractorRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeleteExtractorRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteExtractorRequestDescriptor = $convert
+    .base64Decode('ChZEZWxldGVFeHRyYWN0b3JSZXF1ZXN0Eg4KAmlkGAEgASgFUgJpZA==');
+
 @$core.Deprecated('Use pongDescriptor instead')
 const Pong$json = {
   '1': 'Pong',

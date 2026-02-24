@@ -49,6 +49,13 @@ class NavDrawer extends StatelessWidget {
             Navigator.pushNamed(context, Routes.ingredients);
           },
         ),
+        ListTile(
+          leading: const Icon(Icons.code),
+          title: const Text('Extractors'),
+          onTap: () {
+            Navigator.pushNamed(context, Routes.extractors);
+          },
+        )
       ],
     ),
   );

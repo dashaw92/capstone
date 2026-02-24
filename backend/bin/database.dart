@@ -10,7 +10,13 @@ class IngredientsTable extends Table {
   RealColumn get amount => real()();
 }
 
-@DriftDatabase(tables: [IngredientsTable])
+class ExtractorsTable extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get label => text().withLength(min: 1, max: 128).unique()();
+  TextColumn get script => text()();
+}
+
+@DriftDatabase(tables: [IngredientsTable, ExtractorsTable])
 class BackendDatabase extends _$BackendDatabase {
   BackendDatabase([QueryExecutor? executor])
     : super(executor ?? _openConnection());
