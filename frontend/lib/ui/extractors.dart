@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/lua/lua.dart';
 import 'package:pantry_protocol/protocol.dart';
 
 import '../main.dart';
 import '../net/connection.dart';
+
+const String _scriptTemplate = """
+-- This function will extract ingredients from urls
+function extract (url)
+  print("I got it!!!")
+  print(url)
+  return 1337
+end
+""";
 
 class ExtractorsScreen extends StatefulWidget {
   const ExtractorsScreen({super.key});
@@ -12,7 +22,6 @@ class ExtractorsScreen extends StatefulWidget {
 }
 
 class _ExtractorsScreenState extends State<ExtractorsScreen> {
-
   late Future<ListExtractorsResponse> _extractors;
 
   @override
@@ -46,17 +55,31 @@ class _ExtractorsScreenState extends State<ExtractorsScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, Routes.editExtractor, arguments: item.id);
+                            Navigator.pushNamed(
+                              context,
+                              Routes.editExtractor,
+                              arguments: item.id,
+                            );
                           },
                           child: Icon(Icons.edit),
                         ),
+                        VerticalDivider(),
+                        ElevatedButton(
+                          onPressed: () {
+                            eval("https://google.com/", item.script);
+                          },
+                          child: Icon(Icons.play_arrow),
+                        ),
+                        VerticalDivider(),
                         ElevatedButton(
                           onPressed: () async {
                             await Connection.conn!.deleteExtractor(
                               DeleteExtractorRequest(id: item.id),
                             );
                             setState(() {
-                              _extractors = Connection.conn!.listExtractors(empty);
+                              _extractors = Connection.conn!.listExtractors(
+                                empty,
+                              );
                             });
                           },
                           child: Icon(Icons.delete_forever),
@@ -85,7 +108,12 @@ class _ExtractorsScreenState extends State<ExtractorsScreen> {
 
   void _submit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final r = await Connection.conn!.createExtractor(CreateExtractorRequest(label: _labelController.text, script: "-- TODO: Template for quickstart\n"));
+      final r = await Connection.conn!.createExtractor(
+        CreateExtractorRequest(
+          label: _labelController.text,
+          script: _scriptTemplate,
+        ),
+      );
       _labelController.clear();
 
       if (context.mounted) {
