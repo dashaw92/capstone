@@ -471,14 +471,10 @@ class RenameIngredientRequest extends $pb.GeneratedMessage {
 
 class Extractor extends $pb.GeneratedMessage {
   factory Extractor({
-    $core.int? id,
-    $core.String? label,
-    $core.String? script,
+    $core.String? baseDomain,
   }) {
     final result = create();
-    if (id != null) result.id = id;
-    if (label != null) result.label = label;
-    if (script != null) result.script = script;
+    if (baseDomain != null) result.baseDomain = baseDomain;
     return result;
   }
 
@@ -496,9 +492,7 @@ class Extractor extends $pb.GeneratedMessage {
       package:
           const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
-    ..aOS(2, _omitFieldNames ? '' : 'label')
-    ..aOS(3, _omitFieldNames ? '' : 'script')
+    ..aOS(1, _omitFieldNames ? '' : 'baseDomain', protoName: 'baseDomain')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -520,179 +514,13 @@ class Extractor extends $pb.GeneratedMessage {
   static Extractor? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get baseDomain => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
+  set baseDomain($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasBaseDomain() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get label => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set label($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasLabel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLabel() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get script => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set script($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasScript() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearScript() => $_clearField(3);
-}
-
-class CreateExtractorRequest extends $pb.GeneratedMessage {
-  factory CreateExtractorRequest({
-    $core.String? label,
-    $core.String? script,
-  }) {
-    final result = create();
-    if (label != null) result.label = label;
-    if (script != null) result.script = script;
-    return result;
-  }
-
-  CreateExtractorRequest._();
-
-  factory CreateExtractorRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory CreateExtractorRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateExtractorRequest',
-      package:
-          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
-      createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'label')
-    ..aOS(2, _omitFieldNames ? '' : 'script')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateExtractorRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateExtractorRequest copyWith(
-          void Function(CreateExtractorRequest) updates) =>
-      super.copyWith((message) => updates(message as CreateExtractorRequest))
-          as CreateExtractorRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static CreateExtractorRequest create() => CreateExtractorRequest._();
-  @$core.override
-  CreateExtractorRequest createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static CreateExtractorRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateExtractorRequest>(create);
-  static CreateExtractorRequest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get label => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set label($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasLabel() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearLabel() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get script => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set script($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasScript() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearScript() => $_clearField(2);
-}
-
-class UpdateExtractorRequest extends $pb.GeneratedMessage {
-  factory UpdateExtractorRequest({
-    $core.int? id,
-    $core.String? label,
-    $core.String? script,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (label != null) result.label = label;
-    if (script != null) result.script = script;
-    return result;
-  }
-
-  UpdateExtractorRequest._();
-
-  factory UpdateExtractorRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UpdateExtractorRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdateExtractorRequest',
-      package:
-          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
-    ..aOS(2, _omitFieldNames ? '' : 'label')
-    ..aOS(3, _omitFieldNames ? '' : 'script')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateExtractorRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateExtractorRequest copyWith(
-          void Function(UpdateExtractorRequest) updates) =>
-      super.copyWith((message) => updates(message as UpdateExtractorRequest))
-          as UpdateExtractorRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UpdateExtractorRequest create() => UpdateExtractorRequest._();
-  @$core.override
-  UpdateExtractorRequest createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UpdateExtractorRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateExtractorRequest>(create);
-  static UpdateExtractorRequest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get label => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set label($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasLabel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLabel() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get script => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set script($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasScript() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearScript() => $_clearField(3);
+  void clearBaseDomain() => $_clearField(1);
 }
 
 class ListExtractorsResponse extends $pb.GeneratedMessage {
@@ -746,115 +574,111 @@ class ListExtractorsResponse extends $pb.GeneratedMessage {
   $pb.PbList<Extractor> get extractors => $_getList(0);
 }
 
-class GetExtractorRequest extends $pb.GeneratedMessage {
-  factory GetExtractorRequest({
-    $core.int? id,
+class ExecuteExtractorRequest extends $pb.GeneratedMessage {
+  factory ExecuteExtractorRequest({
+    $core.String? url,
   }) {
     final result = create();
-    if (id != null) result.id = id;
+    if (url != null) result.url = url;
     return result;
   }
 
-  GetExtractorRequest._();
+  ExecuteExtractorRequest._();
 
-  factory GetExtractorRequest.fromBuffer($core.List<$core.int> data,
+  factory ExecuteExtractorRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory GetExtractorRequest.fromJson($core.String json,
+  factory ExecuteExtractorRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'GetExtractorRequest',
+      _omitMessageNames ? '' : 'ExecuteExtractorRequest',
       package:
           const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
+    ..aOS(1, _omitFieldNames ? '' : 'url')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetExtractorRequest clone() => deepCopy();
+  ExecuteExtractorRequest clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GetExtractorRequest copyWith(void Function(GetExtractorRequest) updates) =>
-      super.copyWith((message) => updates(message as GetExtractorRequest))
-          as GetExtractorRequest;
+  ExecuteExtractorRequest copyWith(
+          void Function(ExecuteExtractorRequest) updates) =>
+      super.copyWith((message) => updates(message as ExecuteExtractorRequest))
+          as ExecuteExtractorRequest;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static GetExtractorRequest create() => GetExtractorRequest._();
+  static ExecuteExtractorRequest create() => ExecuteExtractorRequest._();
   @$core.override
-  GetExtractorRequest createEmptyInstance() => create();
+  ExecuteExtractorRequest createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static GetExtractorRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetExtractorRequest>(create);
-  static GetExtractorRequest? _defaultInstance;
+  static ExecuteExtractorRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExecuteExtractorRequest>(create);
+  static ExecuteExtractorRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get url => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
+  set url($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasUrl() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
+  void clearUrl() => $_clearField(1);
 }
 
-class DeleteExtractorRequest extends $pb.GeneratedMessage {
-  factory DeleteExtractorRequest({
-    $core.int? id,
+class ExtractorExecutionResponse extends $pb.GeneratedMessage {
+  factory ExtractorExecutionResponse({
+    $core.Iterable<$core.String>? ingredients,
   }) {
     final result = create();
-    if (id != null) result.id = id;
+    if (ingredients != null) result.ingredients.addAll(ingredients);
     return result;
   }
 
-  DeleteExtractorRequest._();
+  ExtractorExecutionResponse._();
 
-  factory DeleteExtractorRequest.fromBuffer($core.List<$core.int> data,
+  factory ExtractorExecutionResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DeleteExtractorRequest.fromJson($core.String json,
+  factory ExtractorExecutionResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DeleteExtractorRequest',
+      _omitMessageNames ? '' : 'ExtractorExecutionResponse',
       package:
           const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
+    ..pPS(1, _omitFieldNames ? '' : 'ingredients')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteExtractorRequest clone() => deepCopy();
+  ExtractorExecutionResponse clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeleteExtractorRequest copyWith(
-          void Function(DeleteExtractorRequest) updates) =>
-      super.copyWith((message) => updates(message as DeleteExtractorRequest))
-          as DeleteExtractorRequest;
+  ExtractorExecutionResponse copyWith(
+          void Function(ExtractorExecutionResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as ExtractorExecutionResponse))
+          as ExtractorExecutionResponse;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DeleteExtractorRequest create() => DeleteExtractorRequest._();
+  static ExtractorExecutionResponse create() => ExtractorExecutionResponse._();
   @$core.override
-  DeleteExtractorRequest createEmptyInstance() => create();
+  ExtractorExecutionResponse createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static DeleteExtractorRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteExtractorRequest>(create);
-  static DeleteExtractorRequest? _defaultInstance;
+  static ExtractorExecutionResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExtractorExecutionResponse>(create);
+  static ExtractorExecutionResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
+  $pb.PbList<$core.String> get ingredients => $_getList(0);
 }
 
 class Pong extends $pb.GeneratedMessage {

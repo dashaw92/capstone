@@ -30,9 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_monaco: ^1.4.0
   grpc: ^5.1.0
-  lua_dardo: ^0.0.5
+  http: ^1.6.0
   pantry_protocol:
     path: ../protocol
   protobuf: ^6.0.0

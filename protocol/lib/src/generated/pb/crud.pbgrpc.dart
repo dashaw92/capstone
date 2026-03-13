@@ -68,20 +68,6 @@ class PantryServiceClient extends $grpc.Client {
     return $createUnaryCall(_$deleteIngredient, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Extractor> createExtractor(
-    $0.CreateExtractorRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$createExtractor, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Extractor> updateExtractor(
-    $0.UpdateExtractorRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updateExtractor, request, options: options);
-  }
-
   $grpc.ResponseFuture<$0.ListExtractorsResponse> listExtractors(
     $1.Empty request, {
     $grpc.CallOptions? options,
@@ -89,18 +75,11 @@ class PantryServiceClient extends $grpc.Client {
     return $createUnaryCall(_$listExtractors, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Extractor> getExtractor(
-    $0.GetExtractorRequest request, {
+  $grpc.ResponseFuture<$0.ExtractorExecutionResponse> executeExtractor(
+    $0.ExecuteExtractorRequest request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getExtractor, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$1.Empty> deleteExtractor(
-    $0.DeleteExtractorRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$deleteExtractor, request, options: options);
+    return $createUnaryCall(_$executeExtractor, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Pong> ping(
@@ -137,31 +116,16 @@ class PantryServiceClient extends $grpc.Client {
           '/pantry_protocol.PantryService/DeleteIngredient',
           ($0.DeleteIngredientRequest value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
-  static final _$createExtractor =
-      $grpc.ClientMethod<$0.CreateExtractorRequest, $0.Extractor>(
-          '/pantry_protocol.PantryService/CreateExtractor',
-          ($0.CreateExtractorRequest value) => value.writeToBuffer(),
-          $0.Extractor.fromBuffer);
-  static final _$updateExtractor =
-      $grpc.ClientMethod<$0.UpdateExtractorRequest, $0.Extractor>(
-          '/pantry_protocol.PantryService/UpdateExtractor',
-          ($0.UpdateExtractorRequest value) => value.writeToBuffer(),
-          $0.Extractor.fromBuffer);
   static final _$listExtractors =
       $grpc.ClientMethod<$1.Empty, $0.ListExtractorsResponse>(
           '/pantry_protocol.PantryService/ListExtractors',
           ($1.Empty value) => value.writeToBuffer(),
           $0.ListExtractorsResponse.fromBuffer);
-  static final _$getExtractor =
-      $grpc.ClientMethod<$0.GetExtractorRequest, $0.Extractor>(
-          '/pantry_protocol.PantryService/GetExtractor',
-          ($0.GetExtractorRequest value) => value.writeToBuffer(),
-          $0.Extractor.fromBuffer);
-  static final _$deleteExtractor =
-      $grpc.ClientMethod<$0.DeleteExtractorRequest, $1.Empty>(
-          '/pantry_protocol.PantryService/DeleteExtractor',
-          ($0.DeleteExtractorRequest value) => value.writeToBuffer(),
-          $1.Empty.fromBuffer);
+  static final _$executeExtractor = $grpc.ClientMethod<
+          $0.ExecuteExtractorRequest, $0.ExtractorExecutionResponse>(
+      '/pantry_protocol.PantryService/ExecuteExtractor',
+      ($0.ExecuteExtractorRequest value) => value.writeToBuffer(),
+      $0.ExtractorExecutionResponse.fromBuffer);
   static final _$ping = $grpc.ClientMethod<$1.Empty, $0.Pong>(
       '/pantry_protocol.PantryService/Ping',
       ($1.Empty value) => value.writeToBuffer(),
@@ -212,22 +176,6 @@ abstract class PantryServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.DeleteIngredientRequest.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.CreateExtractorRequest, $0.Extractor>(
-        'CreateExtractor',
-        createExtractor_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.CreateExtractorRequest.fromBuffer(value),
-        ($0.Extractor value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdateExtractorRequest, $0.Extractor>(
-        'UpdateExtractor',
-        updateExtractor_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.UpdateExtractorRequest.fromBuffer(value),
-        ($0.Extractor value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.ListExtractorsResponse>(
         'ListExtractors',
         listExtractors_Pre,
@@ -235,22 +183,15 @@ abstract class PantryServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
         ($0.ListExtractorsResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.GetExtractorRequest, $0.Extractor>(
-        'GetExtractor',
-        getExtractor_Pre,
+    $addMethod($grpc.ServiceMethod<$0.ExecuteExtractorRequest,
+            $0.ExtractorExecutionResponse>(
+        'ExecuteExtractor',
+        executeExtractor_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.GetExtractorRequest.fromBuffer(value),
-        ($0.Extractor value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteExtractorRequest, $1.Empty>(
-        'DeleteExtractor',
-        deleteExtractor_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.DeleteExtractorRequest.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+            $0.ExecuteExtractorRequest.fromBuffer(value),
+        ($0.ExtractorExecutionResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.Pong>(
         'Ping',
         ping_Pre,
@@ -300,22 +241,6 @@ abstract class PantryServiceBase extends $grpc.Service {
   $async.Future<$1.Empty> deleteIngredient(
       $grpc.ServiceCall call, $0.DeleteIngredientRequest request);
 
-  $async.Future<$0.Extractor> createExtractor_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateExtractorRequest> $request) async {
-    return createExtractor($call, await $request);
-  }
-
-  $async.Future<$0.Extractor> createExtractor(
-      $grpc.ServiceCall call, $0.CreateExtractorRequest request);
-
-  $async.Future<$0.Extractor> updateExtractor_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.UpdateExtractorRequest> $request) async {
-    return updateExtractor($call, await $request);
-  }
-
-  $async.Future<$0.Extractor> updateExtractor(
-      $grpc.ServiceCall call, $0.UpdateExtractorRequest request);
-
   $async.Future<$0.ListExtractorsResponse> listExtractors_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
     return listExtractors($call, await $request);
@@ -324,21 +249,14 @@ abstract class PantryServiceBase extends $grpc.Service {
   $async.Future<$0.ListExtractorsResponse> listExtractors(
       $grpc.ServiceCall call, $1.Empty request);
 
-  $async.Future<$0.Extractor> getExtractor_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.GetExtractorRequest> $request) async {
-    return getExtractor($call, await $request);
+  $async.Future<$0.ExtractorExecutionResponse> executeExtractor_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ExecuteExtractorRequest> $request) async {
+    return executeExtractor($call, await $request);
   }
 
-  $async.Future<$0.Extractor> getExtractor(
-      $grpc.ServiceCall call, $0.GetExtractorRequest request);
-
-  $async.Future<$1.Empty> deleteExtractor_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.DeleteExtractorRequest> $request) async {
-    return deleteExtractor($call, await $request);
-  }
-
-  $async.Future<$1.Empty> deleteExtractor(
-      $grpc.ServiceCall call, $0.DeleteExtractorRequest request);
+  $async.Future<$0.ExtractorExecutionResponse> executeExtractor(
+      $grpc.ServiceCall call, $0.ExecuteExtractorRequest request);
 
   $async.Future<$0.Pong> ping_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {

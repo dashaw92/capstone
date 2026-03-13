@@ -1,11 +1,16 @@
 import 'package:grpc/grpc.dart';
-import 'package:pantry_protocol/protocol.dart';
+import 'package:pantry_protocol/protocol.dart' hide Extractor;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
+import 'package:http/http.dart' as http;
 
 import 'crud.dart';
+import 'extractors.dart';
 
 class PantryService extends PantryServiceBase {
+  final List<Extractor> extractors;
   final crud = Crud();
+
+  PantryService({required this.extractors});
 
   @override
   Future<Ingredient> createIngredient(
@@ -41,34 +46,20 @@ class PantryService extends PantryServiceBase {
   ) async => await crud.updateAmount(request);
 
   @override
-  Future<Extractor> createExtractor(
+  Future<ExtractorExecutionResponse> executeExtractor(
     ServiceCall call,
-    CreateExtractorRequest request,
-  ) async => await crud.createExtractor(request);
-
-  @override
-  Future<Empty> deleteExtractor(
-    ServiceCall call,
-    DeleteExtractorRequest request,
-  ) async => await crud.deleteExtractor(request);
+    ExecuteExtractorRequest request,
+  ) async {
+    return ExtractorExecutionResponse(ingredients: []);
+  }
 
   @override
   Future<ListExtractorsResponse> listExtractors(
     ServiceCall call,
     Empty request,
-  ) async => await crud.listExtractors();
-
-  @override
-  Future<Extractor> updateExtractor(
-    ServiceCall call,
-    UpdateExtractorRequest request,
-  ) async => await crud.updateExtractor(request);
-
-  @override
-  Future<Extractor> getExtractor(
-    ServiceCall call,
-    GetExtractorRequest request,
-  ) async => await crud.getExtractor(request.id);
+  ) async {
+    return ListExtractorsResponse(extractors: []);
+  }
 }
 
 Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
@@ -83,11 +74,22 @@ Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
 }
 
 void main(List<String> args) async {
+  final extractors = await initExtractors();
+  test(extractors.first);
   final server = Server.create(
-    services: [PantryService()],
+    services: [PantryService(extractors: extractors)],
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
     interceptors: [logging],
   );
   await server.serve(port: 8080);
   print('Server started on port ${server.port}');
+}
+
+void test(Extractor extractor) async {
+  final url = Uri.parse(
+    "https://sallysbakingaddiction.com/chewy-chocolate-chip-cookies/",
+  );
+  final body = await http.read(url);
+  final output = extractor.extract(body);
+  print(output);
 }
