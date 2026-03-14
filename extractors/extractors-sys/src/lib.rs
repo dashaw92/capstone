@@ -15,15 +15,15 @@
 /// ```
 ///
 /// With the newly implemented extractor function in hand, consumers then provide the function
-/// to this macro:
+/// to this macro along with a domain (the domain that the extractor knows how to handle):
 /// ```rust
-/// extractor!(foo);
+/// extractor!(c"allrecipes.com", foo);
 /// ```
 /// Upon building the crate as "cdylib", the resulting shared library will
 /// be functional in the backend server.
 #[macro_export]
 macro_rules! extractor {
-    ($extractor:ident) => {
+    ($domain:literal, $extractor:ident) => {
         use dom_query::Document;
         use std::ffi::{CStr, CString, c_char};
 
@@ -31,6 +31,11 @@ macro_rules! extractor {
         pub struct FFIArray {
             items: *const *mut c_char,
             len: usize,
+        }
+
+        #[unsafe(no_mangle)]
+        pub extern "C" fn domain() -> *const c_char {
+            $domain.as_ptr()
         }
 
         #[unsafe(no_mangle)]

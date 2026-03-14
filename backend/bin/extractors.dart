@@ -10,6 +10,7 @@ final class FFIArray extends Struct {
   external int len;
 }
 
+typedef DomainFunc = Pointer<Utf8> Function();
 typedef ExtractFuncNative = FFIArray Function(Pointer<Utf8> str);
 typedef DeinitFuncNative = Void Function(FFIArray array);
 typedef DeinitFunc = void Function(FFIArray array);
@@ -17,10 +18,15 @@ typedef DeinitFunc = void Function(FFIArray array);
 class Extractor {
   final DynamicLibrary _lib;
 
+  late final String domain;
   ExtractFuncNative? _extract;
   DeinitFunc? _deinit;
 
-  Extractor(String path) : _lib = DynamicLibrary.open(path);
+  Extractor(String path) : _lib = DynamicLibrary.open(path) {
+    domain = (_lib.lookupFunction<DomainFunc, DomainFunc>(
+      "domain",
+    ))().toDartString();
+  }
 
   List<String> extract(String body) {
     _extract ??= _lib.lookupFunction<ExtractFuncNative, ExtractFuncNative>(
@@ -56,7 +62,11 @@ Future<List<Extractor>> initExtractors() async {
 
     for (final suffix in ['.so', '.dll', '.dylib']) {
       if (file.path.endsWith(suffix)) {
-        extractors.add(Extractor(file.absolute.path));
+        var extractor = Extractor(file.absolute.path);
+        print(
+          "Loaded extractor for domain '${extractor.domain}' from ${file.path}",
+        );
+        extractors.add(extractor);
         break;
       }
     }

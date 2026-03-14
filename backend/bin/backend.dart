@@ -1,7 +1,7 @@
 import 'package:grpc/grpc.dart';
 import 'package:pantry_protocol/protocol.dart' hide Extractor;
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 
 import 'crud.dart';
 import 'extractors.dart';
@@ -75,7 +75,10 @@ Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
 
 void main(List<String> args) async {
   final extractors = await initExtractors();
-  // test(extractors.first);
+  // test(
+  //   extractors,
+  //   "https://sallysbakingaddiction.com/chewy-chocolate-chip-cookies/",
+  // );
   final server = Server.create(
     services: [PantryService(extractors: extractors)],
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
@@ -85,14 +88,18 @@ void main(List<String> args) async {
   print('Server started on port ${server.port}');
 }
 
-// void test(Extractor extractor) async {
-//   final url = Uri.parse(
-//     "https://sallysbakingaddiction.com/chewy-chocolate-chip-cookies/",
-//   );
-//   final url = Uri.parse(
-//     "https://www.allrecipes.com/pretzel-millionaire-bars-recipe-11838012",
-//   );
-//   final body = await http.read(url);
-//   final output = extractor.extract(body);
-//   print(output);
-// }
+void test(List<Extractor> extractors, String recipe) async {
+  final url = Uri.parse(recipe);
+  final extractor = extractors
+      .where((ent) => url.host.toLowerCase().contains(ent.domain.toLowerCase()))
+      .firstOrNull;
+
+  if (extractor == null) {
+    print("no matching extractor for url!");
+    return;
+  }
+
+  final body = await http.read(url);
+  final output = extractor.extract(body);
+  print(output);
+}
