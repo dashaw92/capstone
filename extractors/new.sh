@@ -11,12 +11,14 @@ EOF
 
 # Note: Intentionally overwriting the previous contents of lib.rs here
 cat << EOF > src/lib.rs
+use dom_query::Matcher;
 use extractors_sys::extractor;
 
 extractor!(extract_impl);
 
-fn extract_impl(doc: &'_ Document) -> impl Iterator<Item = Selection<'_>> {
+fn extract_impl(doc: &Document) -> impl Iterator<Item = String> {
   let matcher = Matcher::new("").unwrap();
   doc.select_matcher(&matcher).iter()
+    .map(|s| s.text().to_string())
 }
 EOF

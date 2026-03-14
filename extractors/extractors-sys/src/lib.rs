@@ -7,9 +7,9 @@
 /// of the library, enabling them to define the extractor function that extract will use.
 /// The extractor function takes the form of:
 /// ```rust
-/// use dom_query::{Document, Selection};
+/// use dom_query::Document;
 ///
-/// fn foo(doc: &'_ Document) -> impl Iterator<Item = Selection<'_>> {
+/// fn foo(doc: &Document) -> impl Iterator<Item = String> {
 ///    todo!("traverse the document tree and yield elements of interest");
 /// }
 /// ```
@@ -24,7 +24,7 @@
 #[macro_export]
 macro_rules! extractor {
     ($extractor:ident) => {
-        use dom_query::{Document, Matcher, Selection};
+        use dom_query::Document;
         use std::ffi::{CStr, CString, c_char};
 
         #[repr(C)]
@@ -51,7 +51,7 @@ macro_rules! extractor {
             let mut array: Vec<CString> = vec![];
             for fragment in output {
                 array.push(
-                    CString::new(fragment.text().to_string())
+                    CString::new(fragment)
                         .expect("invalid conversion to CString when creating FFIArray"),
                 );
             }
