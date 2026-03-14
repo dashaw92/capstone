@@ -1,0 +1,11 @@
+[package]
+name = "allrecipes"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+dom_query = "0.26.0"
+extractors-sys = { path = "../extractors-sys" }
