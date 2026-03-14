@@ -1,0 +1,7 @@
+[package]
+name = "extractors-sys"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+dom_query = "0.26.0"
