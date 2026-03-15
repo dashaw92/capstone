@@ -6,7 +6,6 @@ version = 4
 name = "allrecipes"
 version = "0.1.0"
 dependencies = [
- "dom_query",
  "extractors-sys",
 ]
 

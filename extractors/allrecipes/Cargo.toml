@@ -7,5 +7,4 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-dom_query = "0.26.0"
 extractors-sys = { path = "../extractors-sys" }

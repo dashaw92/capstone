@@ -1,3 +1,4 @@
+pub use dom_query as dom;
 use dom_query::Selection;
 
 /// Generates all of the boilerplate required to interface the backend server, namely:
@@ -26,7 +27,6 @@ use dom_query::Selection;
 #[macro_export]
 macro_rules! extractor {
     ($domain:literal, $extractor:ident) => {
-        use dom_query::Document;
         use std::ffi::{CStr, CString, c_char};
 
         #[repr(C)]
@@ -100,6 +100,8 @@ pub fn standard_processing(input: Selection<'_>) -> String {
 /// Converts each "word" of an ingredient to title case:
 /// "vanilla extract" -> "Vanilla Extract"
 fn title_case(input: String) -> String {
+    use std::iter::{chain, once};
+
     input
         .split_whitespace()
         .flat_map(|s: &str| {
@@ -115,8 +117,9 @@ fn title_case(input: String) -> String {
 
             //create an iterator comprised of the newly capitalized character, the original characters,
             //and a trailing space (to return the input string back to the original form).
-            std::iter::chain(std::iter::once(first), rest).chain(std::iter::once(' '))
+            chain(once(first), rest).chain(once(' '))
         })
+        .take(input.len()) //strip the trailing ' ' from the output
         .collect()
 }
 
@@ -124,6 +127,6 @@ fn title_case(input: String) -> String {
 /// Intended to be used as a step during the extraction function implementation's processing.
 pub fn alnum(mut input: String) -> String {
     // char::is_alphanumeric is Unicode aware and will respect non-English letters and numbers
-    input.retain(|c| c.is_alphanumeric());
+    input.retain(|c| c.is_alphanumeric() || c.is_whitespace());
     input
 }

@@ -1,5 +1,7 @@
-use dom_query::Matcher;
-use extractors_sys::{extractor, standard_processing};
+use extractors_sys::{
+    dom::{Document, Matcher},
+    extractor, standard_processing,
+};
 
 extractor!(c"sallysbakingaddiction.com", sallys);
 
