@@ -1,13 +1,12 @@
 import 'package:grpc/grpc.dart';
-import 'package:pantry_protocol/protocol.dart' hide Extractor;
+import 'package:pantry_protocol/protocol.dart';
 import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
-import 'package:http/http.dart' as http;
 
 import 'crud.dart';
-import 'extractors.dart';
+import 'extractors.dart' as ffi;
 
 class PantryService extends PantryServiceBase {
-  final List<Extractor> extractors;
+  final List<ffi.Extractor> extractors;
   final crud = Crud();
 
   PantryService({required this.extractors});
@@ -50,7 +49,8 @@ class PantryService extends PantryServiceBase {
     ServiceCall call,
     ExecuteExtractorRequest request,
   ) async {
-    return ExtractorExecutionResponse(ingredients: []);
+    final output = await ffi.runExtraction(extractors, request.url);
+    return ExtractorExecutionResponse(ingredients: output);
   }
 
   @override
@@ -58,7 +58,8 @@ class PantryService extends PantryServiceBase {
     ServiceCall call,
     Empty request,
   ) async {
-    return ListExtractorsResponse(extractors: []);
+    final pbExtractors = extractors.map((e) => Extractor(baseDomain: e.domain));
+    return ListExtractorsResponse(extractors: pbExtractors);
   }
 }
 
@@ -74,11 +75,7 @@ Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
 }
 
 void main(List<String> args) async {
-  final extractors = await initExtractors();
-  // test(
-  //   extractors,
-  //   "https://sallysbakingaddiction.com/chewy-chocolate-chip-cookies/",
-  // );
+  final extractors = await ffi.initExtractors();
   final server = Server.create(
     services: [PantryService(extractors: extractors)],
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
@@ -86,20 +83,4 @@ void main(List<String> args) async {
   );
   await server.serve(port: 8080);
   print('Server started on port ${server.port}');
-}
-
-void test(List<Extractor> extractors, String recipe) async {
-  final url = Uri.parse(recipe);
-  final extractor = extractors
-      .where((ent) => url.host.toLowerCase().contains(ent.domain.toLowerCase()))
-      .firstOrNull;
-
-  if (extractor == null) {
-    print("no matching extractor for url!");
-    return;
-  }
-
-  final body = await http.read(url);
-  final output = extractor.extract(body);
-  print(output);
 }

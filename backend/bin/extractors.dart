@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io' show Directory, File, exit;
 
 import 'package:ffi/ffi.dart';
+import 'package:http/http.dart' as http;
 
 final class FFIArray extends Struct {
   external Pointer<Pointer<Utf8>> items;
@@ -14,6 +15,24 @@ typedef DomainFunc = Pointer<Utf8> Function();
 typedef ExtractFuncNative = FFIArray Function(Pointer<Utf8> str);
 typedef DeinitFuncNative = Void Function(FFIArray array);
 typedef DeinitFunc = void Function(FFIArray array);
+
+Future<List<String>?> runExtraction(
+  List<Extractor> extractors,
+  String recipe,
+) async {
+  final url = Uri.parse(recipe);
+  final extractor = extractors
+      .where((ent) => url.host.toLowerCase().contains(ent.domain.toLowerCase()))
+      .firstOrNull;
+
+  if (extractor == null) {
+    print("No matching extractor for host '${url.host}'!");
+    return null;
+  }
+
+  final body = await http.read(url);
+  return extractor.extract(body);
+}
 
 class Extractor {
   final DynamicLibrary _lib;
