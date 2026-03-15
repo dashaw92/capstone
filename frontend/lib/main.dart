@@ -8,12 +8,14 @@ class Routes {
   static const String home = '/';
   static const String established = '/established';
   static const String ingredients = '/established/ingredients';
+  static const String extractors = '/established/extractors';
 }
 
 final Map<String, WidgetBuilder> _routes = {
   Routes.home: (_) => const ConnectScreen(),
   Routes.established: (_) => const EstablishedConnectionScreen(),
   Routes.ingredients: (_) => const IngredientsScreen(),
+  Routes.extractors: (_) => const ExtractorsScreen(),
 };
 
 void main() async {

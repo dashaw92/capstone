@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/net/connection.dart';
 import 'package:pantry_protocol/protocol.dart';
 
-import '../main.dart';
-
 class IngredientsScreen extends StatefulWidget {
   const IngredientsScreen({super.key});
 
