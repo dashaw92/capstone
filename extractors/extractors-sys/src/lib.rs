@@ -1,3 +1,5 @@
+use dom_query::Selection;
+
 /// Generates all of the boilerplate required to interface the backend server, namely:
 /// FFIArray: A deconstructed vec of CStrings converted to pointers (*const *mut c_char)
 /// extract: pub fn that takes raw html and selects ingredients from the page
@@ -84,4 +86,44 @@ macro_rules! extractor {
             }
         }
     };
+}
+
+/// Wraps up all typical steps taken to process a given text fragment into a standard
+/// ingredient format.
+pub fn standard_processing(input: Selection<'_>) -> String {
+    let text = input.text().to_string();
+    let stripped = alnum(text);
+    let title = title_case(stripped);
+    title
+}
+
+/// Converts each "word" of an ingredient to title case:
+/// "vanilla extract" -> "Vanilla Extract"
+fn title_case(input: String) -> String {
+    input
+        .split_whitespace()
+        .flat_map(|s: &str| {
+            //capitalize the first character
+            let first = s
+                .chars()
+                .next()
+                .map(|c| c.to_uppercase())
+                .and_then(|mut uppers| uppers.next())
+                .expect("invalid char in title_case");
+            //and keep the rest of the part as-is
+            let rest = s.chars().skip(1);
+
+            //create an iterator comprised of the newly capitalized character, the original characters,
+            //and a trailing space (to return the input string back to the original form).
+            std::iter::chain(std::iter::once(first), rest).chain(std::iter::once(' '))
+        })
+        .collect()
+}
+
+/// Convenience method to strip characters from strings that are neither letters nor digits
+/// Intended to be used as a step during the extraction function implementation's processing.
+pub fn alnum(mut input: String) -> String {
+    // char::is_alphanumeric is Unicode aware and will respect non-English letters and numbers
+    input.retain(|c| c.is_alphanumeric());
+    input
 }
