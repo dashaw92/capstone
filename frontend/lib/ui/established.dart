@@ -84,6 +84,7 @@ class _EstablishedConnectionScreenState
                       setState(() {
                         _recipeUrlController.clear();
                         _extractorResponse = null;
+                        knownIngredients.clear();
                       });
                     },
                     child: Icon(Icons.backspace),
