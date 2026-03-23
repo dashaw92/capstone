@@ -12,10 +12,10 @@ class PantryService extends PantryServiceBase {
   PantryService({required this.extractors});
 
   @override
-  Future<Ingredient> createIngredient(
+  Future<CreatedIngredientsResponse> createIngredients(
     ServiceCall call,
-    CreateIngredientRequest request,
-  ) async => await crud.createIngredient(request);
+    CreateIngredientsRequest request,
+  ) async => await crud.createIngredients(request);
 
   @override
   Future<Empty> deleteIngredient(
@@ -31,18 +31,6 @@ class PantryService extends PantryServiceBase {
 
   @override
   Future<Pong> ping(ServiceCall call, Empty request) async => await crud.ping();
-
-  @override
-  Future<Ingredient> renameIngredient(
-    ServiceCall call,
-    RenameIngredientRequest request,
-  ) async => await crud.renameIngredient(request);
-
-  @override
-  Future<Ingredient> updateIngredient(
-    ServiceCall call,
-    UpdateIngredientRequest request,
-  ) async => await crud.updateAmount(request);
 
   @override
   Future<ExtractorExecutionResponse> executeExtractor(

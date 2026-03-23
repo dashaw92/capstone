@@ -24,12 +24,10 @@ class Ingredient extends $pb.GeneratedMessage {
   factory Ingredient({
     $core.int? id,
     $core.String? label,
-    $core.double? amount,
   }) {
     final result = create();
     if (id != null) result.id = id;
     if (label != null) result.label = label;
-    if (amount != null) result.amount = amount;
     return result;
   }
 
@@ -49,7 +47,6 @@ class Ingredient extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aI(1, _omitFieldNames ? '' : 'id')
     ..aOS(2, _omitFieldNames ? '' : 'label')
-    ..aD(3, _omitFieldNames ? '' : 'amount')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -87,15 +84,6 @@ class Ingredient extends $pb.GeneratedMessage {
   $core.bool hasLabel() => $_has(1);
   @$pb.TagNumber(2)
   void clearLabel() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.double get amount => $_getN(2);
-  @$pb.TagNumber(3)
-  set amount($core.double value) => $_setDouble(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasAmount() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAmount() => $_clearField(3);
 }
 
 /// Try to get an Ingredient by its label
@@ -155,72 +143,106 @@ class GetIdRequest extends $pb.GeneratedMessage {
 }
 
 /// Try to create a new Ingredient
-class CreateIngredientRequest extends $pb.GeneratedMessage {
-  factory CreateIngredientRequest({
-    $core.String? label,
-    $core.double? amount,
+class CreateIngredientsRequest extends $pb.GeneratedMessage {
+  factory CreateIngredientsRequest({
+    $core.Iterable<$core.String>? label,
   }) {
     final result = create();
-    if (label != null) result.label = label;
-    if (amount != null) result.amount = amount;
+    if (label != null) result.label.addAll(label);
     return result;
   }
 
-  CreateIngredientRequest._();
+  CreateIngredientsRequest._();
 
-  factory CreateIngredientRequest.fromBuffer($core.List<$core.int> data,
+  factory CreateIngredientsRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CreateIngredientRequest.fromJson($core.String json,
+  factory CreateIngredientsRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CreateIngredientRequest',
+      _omitMessageNames ? '' : 'CreateIngredientsRequest',
       package:
           const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'label')
-    ..aD(2, _omitFieldNames ? '' : 'amount')
+    ..pPS(1, _omitFieldNames ? '' : 'label')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateIngredientRequest clone() => deepCopy();
+  CreateIngredientsRequest clone() => deepCopy();
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CreateIngredientRequest copyWith(
-          void Function(CreateIngredientRequest) updates) =>
-      super.copyWith((message) => updates(message as CreateIngredientRequest))
-          as CreateIngredientRequest;
+  CreateIngredientsRequest copyWith(
+          void Function(CreateIngredientsRequest) updates) =>
+      super.copyWith((message) => updates(message as CreateIngredientsRequest))
+          as CreateIngredientsRequest;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CreateIngredientRequest create() => CreateIngredientRequest._();
+  static CreateIngredientsRequest create() => CreateIngredientsRequest._();
   @$core.override
-  CreateIngredientRequest createEmptyInstance() => create();
+  CreateIngredientsRequest createEmptyInstance() => create();
   @$core.pragma('dart2js:noInline')
-  static CreateIngredientRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateIngredientRequest>(create);
-  static CreateIngredientRequest? _defaultInstance;
+  static CreateIngredientsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateIngredientsRequest>(create);
+  static CreateIngredientsRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get label => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set label($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasLabel() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearLabel() => $_clearField(1);
+  $pb.PbList<$core.String> get label => $_getList(0);
+}
 
-  @$pb.TagNumber(2)
-  $core.double get amount => $_getN(1);
-  @$pb.TagNumber(2)
-  set amount($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAmount() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAmount() => $_clearField(2);
+class CreatedIngredientsResponse extends $pb.GeneratedMessage {
+  factory CreatedIngredientsResponse({
+    $core.Iterable<Ingredient>? ingredients,
+  }) {
+    final result = create();
+    if (ingredients != null) result.ingredients.addAll(ingredients);
+    return result;
+  }
+
+  CreatedIngredientsResponse._();
+
+  factory CreatedIngredientsResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreatedIngredientsResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreatedIngredientsResponse',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
+      createEmptyInstance: create)
+    ..pPM<Ingredient>(1, _omitFieldNames ? '' : 'ingredients',
+        subBuilder: Ingredient.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreatedIngredientsResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreatedIngredientsResponse copyWith(
+          void Function(CreatedIngredientsResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as CreatedIngredientsResponse))
+          as CreatedIngredientsResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreatedIngredientsResponse create() => CreatedIngredientsResponse._();
+  @$core.override
+  CreatedIngredientsResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CreatedIngredientsResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreatedIngredientsResponse>(create);
+  static CreatedIngredientsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Ingredient> get ingredients => $_getList(0);
 }
 
 /// Drop an Ingredient from the database
@@ -330,143 +352,6 @@ class ListIngredientsResponse extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<Ingredient> get ingredients => $_getList(0);
-}
-
-/// Directly set the new amount for a Ingredient
-class UpdateIngredientRequest extends $pb.GeneratedMessage {
-  factory UpdateIngredientRequest({
-    $core.int? id,
-    $core.double? amount,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (amount != null) result.amount = amount;
-    return result;
-  }
-
-  UpdateIngredientRequest._();
-
-  factory UpdateIngredientRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory UpdateIngredientRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'UpdateIngredientRequest',
-      package:
-          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
-    ..aD(2, _omitFieldNames ? '' : 'amount')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateIngredientRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UpdateIngredientRequest copyWith(
-          void Function(UpdateIngredientRequest) updates) =>
-      super.copyWith((message) => updates(message as UpdateIngredientRequest))
-          as UpdateIngredientRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static UpdateIngredientRequest create() => UpdateIngredientRequest._();
-  @$core.override
-  UpdateIngredientRequest createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static UpdateIngredientRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateIngredientRequest>(create);
-  static UpdateIngredientRequest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get amount => $_getN(1);
-  @$pb.TagNumber(2)
-  set amount($core.double value) => $_setDouble(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasAmount() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAmount() => $_clearField(2);
-}
-
-class RenameIngredientRequest extends $pb.GeneratedMessage {
-  factory RenameIngredientRequest({
-    $core.int? id,
-    $core.String? newLabel,
-  }) {
-    final result = create();
-    if (id != null) result.id = id;
-    if (newLabel != null) result.newLabel = newLabel;
-    return result;
-  }
-
-  RenameIngredientRequest._();
-
-  factory RenameIngredientRequest.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory RenameIngredientRequest.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RenameIngredientRequest',
-      package:
-          const $pb.PackageName(_omitMessageNames ? '' : 'pantry_protocol'),
-      createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'id')
-    ..aOS(2, _omitFieldNames ? '' : 'newLabel', protoName: 'newLabel')
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RenameIngredientRequest clone() => deepCopy();
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RenameIngredientRequest copyWith(
-          void Function(RenameIngredientRequest) updates) =>
-      super.copyWith((message) => updates(message as RenameIngredientRequest))
-          as RenameIngredientRequest;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static RenameIngredientRequest create() => RenameIngredientRequest._();
-  @$core.override
-  RenameIngredientRequest createEmptyInstance() => create();
-  @$core.pragma('dart2js:noInline')
-  static RenameIngredientRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RenameIngredientRequest>(create);
-  static RenameIngredientRequest? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set id($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get newLabel => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set newLabel($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasNewLabel() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearNewLabel() => $_clearField(2);
 }
 
 class Extractor extends $pb.GeneratedMessage {

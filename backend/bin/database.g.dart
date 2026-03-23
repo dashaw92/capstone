@@ -36,17 +36,8 @@ class $IngredientsTableTable extends IngredientsTable
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, name, amount];
+  List<GeneratedColumn> get $columns => [id, name];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -70,14 +61,6 @@ class $IngredientsTableTable extends IngredientsTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     return context;
   }
 
@@ -95,10 +78,6 @@ class $IngredientsTableTable extends IngredientsTable
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
     );
   }
 
@@ -112,27 +91,17 @@ class IngredientsTableData extends DataClass
     implements Insertable<IngredientsTableData> {
   final int id;
   final String name;
-  final double amount;
-  const IngredientsTableData({
-    required this.id,
-    required this.name,
-    required this.amount,
-  });
+  const IngredientsTableData({required this.id, required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    map['amount'] = Variable<double>(amount);
     return map;
   }
 
   IngredientsTableCompanion toCompanion(bool nullToAbsent) {
-    return IngredientsTableCompanion(
-      id: Value(id),
-      name: Value(name),
-      amount: Value(amount),
-    );
+    return IngredientsTableCompanion(id: Value(id), name: Value(name));
   }
 
   factory IngredientsTableData.fromJson(
@@ -143,7 +112,6 @@ class IngredientsTableData extends DataClass
     return IngredientsTableData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      amount: serializer.fromJson<double>(json['amount']),
     );
   }
   @override
@@ -152,21 +120,15 @@ class IngredientsTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'amount': serializer.toJson<double>(amount),
     };
   }
 
-  IngredientsTableData copyWith({int? id, String? name, double? amount}) =>
-      IngredientsTableData(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        amount: amount ?? this.amount,
-      );
+  IngredientsTableData copyWith({int? id, String? name}) =>
+      IngredientsTableData(id: id ?? this.id, name: name ?? this.name);
   IngredientsTableData copyWithCompanion(IngredientsTableCompanion data) {
     return IngredientsTableData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      amount: data.amount.present ? data.amount.value : this.amount,
     );
   }
 
@@ -174,59 +136,46 @@ class IngredientsTableData extends DataClass
   String toString() {
     return (StringBuffer('IngredientsTableData(')
           ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('amount: $amount')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, amount);
+  int get hashCode => Object.hash(id, name);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is IngredientsTableData &&
           other.id == this.id &&
-          other.name == this.name &&
-          other.amount == this.amount);
+          other.name == this.name);
 }
 
 class IngredientsTableCompanion extends UpdateCompanion<IngredientsTableData> {
   final Value<int> id;
   final Value<String> name;
-  final Value<double> amount;
   const IngredientsTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.amount = const Value.absent(),
   });
   IngredientsTableCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required double amount,
-  }) : name = Value(name),
-       amount = Value(amount);
+  }) : name = Value(name);
   static Insertable<IngredientsTableData> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<double>? amount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (amount != null) 'amount': amount,
     });
   }
 
-  IngredientsTableCompanion copyWith({
-    Value<int>? id,
-    Value<String>? name,
-    Value<double>? amount,
-  }) {
+  IngredientsTableCompanion copyWith({Value<int>? id, Value<String>? name}) {
     return IngredientsTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      amount: amount ?? this.amount,
     );
   }
 
@@ -239,9 +188,6 @@ class IngredientsTableCompanion extends UpdateCompanion<IngredientsTableData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
-    }
     return map;
   }
 
@@ -249,8 +195,7 @@ class IngredientsTableCompanion extends UpdateCompanion<IngredientsTableData> {
   String toString() {
     return (StringBuffer('IngredientsTableCompanion(')
           ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('amount: $amount')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
@@ -270,17 +215,9 @@ abstract class _$BackendDatabase extends GeneratedDatabase {
 }
 
 typedef $$IngredientsTableTableCreateCompanionBuilder =
-    IngredientsTableCompanion Function({
-      Value<int> id,
-      required String name,
-      required double amount,
-    });
+    IngredientsTableCompanion Function({Value<int> id, required String name});
 typedef $$IngredientsTableTableUpdateCompanionBuilder =
-    IngredientsTableCompanion Function({
-      Value<int> id,
-      Value<String> name,
-      Value<double> amount,
-    });
+    IngredientsTableCompanion Function({Value<int> id, Value<String> name});
 
 class $$IngredientsTableTableFilterComposer
     extends Composer<_$BackendDatabase, $IngredientsTableTable> {
@@ -298,11 +235,6 @@ class $$IngredientsTableTableFilterComposer
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -325,11 +257,6 @@ class $$IngredientsTableTableOrderingComposer
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$IngredientsTableTableAnnotationComposer
@@ -346,9 +273,6 @@ class $$IngredientsTableTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
 }
 
 class $$IngredientsTableTableTableManager
@@ -390,19 +314,10 @@ class $$IngredientsTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<double> amount = const Value.absent(),
-              }) =>
-                  IngredientsTableCompanion(id: id, name: name, amount: amount),
+              }) => IngredientsTableCompanion(id: id, name: name),
           createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required String name,
-                required double amount,
-              }) => IngredientsTableCompanion.insert(
-                id: id,
-                name: name,
-                amount: amount,
-              ),
+              ({Value<int> id = const Value.absent(), required String name}) =>
+                  IngredientsTableCompanion.insert(id: id, name: name),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),

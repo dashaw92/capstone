@@ -12,7 +12,6 @@ class IngredientsScreen extends StatefulWidget {
 class _IngredientsState extends State<IngredientsScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _amountController = TextEditingController();
 
   late Future<ListIngredientsResponse> _ingredients;
 
@@ -46,10 +45,6 @@ class _IngredientsState extends State<IngredientsScreen> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: () => _setAmountDialog(item.amount),
-                          child: Icon(Icons.numbers),
-                        ),
-                        ElevatedButton(
                           onPressed: () async {
                             await Connection.conn!.deleteIngredient(
                               DeleteIngredientRequest(id: item.id),
@@ -81,12 +76,11 @@ class _IngredientsState extends State<IngredientsScreen> {
 
   void _submit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      final name = await Connection.conn!.createIngredient(
-        CreateIngredientRequest(label: _nameController.text, amount: double.tryParse(_amountController.text) ?? 0.0),
+      final _ = await Connection.conn!.createIngredients(
+        CreateIngredientsRequest(label: [_nameController.text]),
       );
 
       _nameController.clear();
-      _amountController.clear();
 
       if (context.mounted) {
         Navigator.pop(context);
@@ -118,21 +112,6 @@ class _IngredientsState extends State<IngredientsScreen> {
               autofocus: true,
               textInputAction: TextInputAction.next,
             ),
-            TextFormField(
-              controller: _amountController,
-              validator: (v) {
-                if (v == null || v.isEmpty) return "Amount must not be empty";
-                final parsed = double.tryParse(v);
-                if (parsed == null || parsed < 0.0) return "Invalid amount";
-                return null;
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Amount (grams)",
-              ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onFieldSubmitted: (_) => _submit(context),
-            ),
           ],
         ),
       ),
@@ -148,10 +127,4 @@ class _IngredientsState extends State<IngredientsScreen> {
       ],
     ),
   );
-
-  Future _setAmountDialog(double amount) {
-    return showDialog(context: context, builder: (context) {
-      return Center(child: Text("Currently have $amount"));
-    });
-  }
 }

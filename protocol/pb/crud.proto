@@ -10,7 +10,6 @@ import "google/protobuf/empty.proto";
 message Ingredient {
   int32 id = 1;
   string label = 2;
-  double amount = 3;
 }
 
 // Try to get an Ingredient by its label
@@ -19,9 +18,12 @@ message GetIdRequest {
 }
 
 // Try to create a new Ingredient
-message CreateIngredientRequest {
-  string label = 1;
-  optional double amount = 2;
+message CreateIngredientsRequest {
+  repeated string label = 1;
+}
+
+message CreatedIngredientsResponse {
+  repeated Ingredient ingredients = 1;
 }
 
 // Drop an Ingredient from the database
@@ -32,17 +34,6 @@ message DeleteIngredientRequest {
 // Get all Ingredients in the database
 message ListIngredientsResponse {
   repeated Ingredient ingredients = 1;
-}
-
-// Directly set the new amount for a Ingredient
-message UpdateIngredientRequest {
-  int32 id = 1;
-  double amount = 2;
-}
-
-message RenameIngredientRequest {
-  int32 id = 1;
-  string newLabel = 2;
 }
 
 message Extractor {
@@ -66,10 +57,8 @@ message Pong {
 }
 
 service PantryService {
-  rpc CreateIngredient(CreateIngredientRequest) returns (Ingredient);
+  rpc CreateIngredients(CreateIngredientsRequest) returns (CreatedIngredientsResponse);
   rpc ListIngredients(google.protobuf.Empty) returns (ListIngredientsResponse);
-  rpc UpdateIngredient(UpdateIngredientRequest) returns (Ingredient);
-  rpc RenameIngredient(RenameIngredientRequest) returns (Ingredient);
   rpc DeleteIngredient(DeleteIngredientRequest) returns (google.protobuf.Empty);
 
   rpc ListExtractors(google.protobuf.Empty) returns (ListExtractorsResponse);

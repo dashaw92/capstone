@@ -7,7 +7,6 @@ part 'database.g.dart';
 class IngredientsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 1, max: 128).unique()();
-  RealColumn get amount => real()();
 }
 
 @DriftDatabase(tables: [IngredientsTable])

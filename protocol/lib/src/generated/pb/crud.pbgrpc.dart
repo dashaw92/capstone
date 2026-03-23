@@ -33,11 +33,11 @@ class PantryServiceClient extends $grpc.Client {
 
   PantryServiceClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.Ingredient> createIngredient(
-    $0.CreateIngredientRequest request, {
+  $grpc.ResponseFuture<$0.CreatedIngredientsResponse> createIngredients(
+    $0.CreateIngredientsRequest request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$createIngredient, request, options: options);
+    return $createUnaryCall(_$createIngredients, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.ListIngredientsResponse> listIngredients(
@@ -45,20 +45,6 @@ class PantryServiceClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$listIngredients, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Ingredient> updateIngredient(
-    $0.UpdateIngredientRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$updateIngredient, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Ingredient> renameIngredient(
-    $0.RenameIngredientRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$renameIngredient, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.Empty> deleteIngredient(
@@ -91,26 +77,16 @@ class PantryServiceClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$createIngredient =
-      $grpc.ClientMethod<$0.CreateIngredientRequest, $0.Ingredient>(
-          '/pantry_protocol.PantryService/CreateIngredient',
-          ($0.CreateIngredientRequest value) => value.writeToBuffer(),
-          $0.Ingredient.fromBuffer);
+  static final _$createIngredients = $grpc.ClientMethod<
+          $0.CreateIngredientsRequest, $0.CreatedIngredientsResponse>(
+      '/pantry_protocol.PantryService/CreateIngredients',
+      ($0.CreateIngredientsRequest value) => value.writeToBuffer(),
+      $0.CreatedIngredientsResponse.fromBuffer);
   static final _$listIngredients =
       $grpc.ClientMethod<$1.Empty, $0.ListIngredientsResponse>(
           '/pantry_protocol.PantryService/ListIngredients',
           ($1.Empty value) => value.writeToBuffer(),
           $0.ListIngredientsResponse.fromBuffer);
-  static final _$updateIngredient =
-      $grpc.ClientMethod<$0.UpdateIngredientRequest, $0.Ingredient>(
-          '/pantry_protocol.PantryService/UpdateIngredient',
-          ($0.UpdateIngredientRequest value) => value.writeToBuffer(),
-          $0.Ingredient.fromBuffer);
-  static final _$renameIngredient =
-      $grpc.ClientMethod<$0.RenameIngredientRequest, $0.Ingredient>(
-          '/pantry_protocol.PantryService/RenameIngredient',
-          ($0.RenameIngredientRequest value) => value.writeToBuffer(),
-          $0.Ingredient.fromBuffer);
   static final _$deleteIngredient =
       $grpc.ClientMethod<$0.DeleteIngredientRequest, $1.Empty>(
           '/pantry_protocol.PantryService/DeleteIngredient',
@@ -137,14 +113,15 @@ abstract class PantryServiceBase extends $grpc.Service {
   $core.String get $name => 'pantry_protocol.PantryService';
 
   PantryServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.CreateIngredientRequest, $0.Ingredient>(
-        'CreateIngredient',
-        createIngredient_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CreateIngredientsRequest,
+            $0.CreatedIngredientsResponse>(
+        'CreateIngredients',
+        createIngredients_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.CreateIngredientRequest.fromBuffer(value),
-        ($0.Ingredient value) => value.writeToBuffer()));
+            $0.CreateIngredientsRequest.fromBuffer(value),
+        ($0.CreatedIngredientsResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.Empty, $0.ListIngredientsResponse>(
         'ListIngredients',
         listIngredients_Pre,
@@ -152,22 +129,6 @@ abstract class PantryServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
         ($0.ListIngredientsResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdateIngredientRequest, $0.Ingredient>(
-        'UpdateIngredient',
-        updateIngredient_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.UpdateIngredientRequest.fromBuffer(value),
-        ($0.Ingredient value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.RenameIngredientRequest, $0.Ingredient>(
-        'RenameIngredient',
-        renameIngredient_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.RenameIngredientRequest.fromBuffer(value),
-        ($0.Ingredient value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteIngredientRequest, $1.Empty>(
         'DeleteIngredient',
         deleteIngredient_Pre,
@@ -201,13 +162,14 @@ abstract class PantryServiceBase extends $grpc.Service {
         ($0.Pong value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Ingredient> createIngredient_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.CreateIngredientRequest> $request) async {
-    return createIngredient($call, await $request);
+  $async.Future<$0.CreatedIngredientsResponse> createIngredients_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateIngredientsRequest> $request) async {
+    return createIngredients($call, await $request);
   }
 
-  $async.Future<$0.Ingredient> createIngredient(
-      $grpc.ServiceCall call, $0.CreateIngredientRequest request);
+  $async.Future<$0.CreatedIngredientsResponse> createIngredients(
+      $grpc.ServiceCall call, $0.CreateIngredientsRequest request);
 
   $async.Future<$0.ListIngredientsResponse> listIngredients_Pre(
       $grpc.ServiceCall $call, $async.Future<$1.Empty> $request) async {
@@ -216,22 +178,6 @@ abstract class PantryServiceBase extends $grpc.Service {
 
   $async.Future<$0.ListIngredientsResponse> listIngredients(
       $grpc.ServiceCall call, $1.Empty request);
-
-  $async.Future<$0.Ingredient> updateIngredient_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.UpdateIngredientRequest> $request) async {
-    return updateIngredient($call, await $request);
-  }
-
-  $async.Future<$0.Ingredient> updateIngredient(
-      $grpc.ServiceCall call, $0.UpdateIngredientRequest request);
-
-  $async.Future<$0.Ingredient> renameIngredient_Pre($grpc.ServiceCall $call,
-      $async.Future<$0.RenameIngredientRequest> $request) async {
-    return renameIngredient($call, await $request);
-  }
-
-  $async.Future<$0.Ingredient> renameIngredient(
-      $grpc.ServiceCall call, $0.RenameIngredientRequest request);
 
   $async.Future<$1.Empty> deleteIngredient_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteIngredientRequest> $request) async {
