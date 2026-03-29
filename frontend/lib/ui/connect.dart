@@ -10,6 +10,39 @@ class ConnectScreen extends StatefulWidget {
   ConnectScreenState createState() => ConnectScreenState();
 }
 
+class DropdownConnectionButton extends StatelessWidget {
+  final String? server;
+  const DropdownConnectionButton({required this.server, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: const Text("Connect"),
+      onPressed: () async {
+        if (server != null) {
+          final connected = await Connection.tryConnect(
+            StoredConnection.fromId(server!),
+          );
+          if (!context.mounted) return;
+          if (connected) {
+            Navigator.pushNamed(context, Routes.established);
+            return;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text("Failed to connect to server!"),
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+}
+
 class ConnectScreenState extends State<ConnectScreen> {
   final _formKey = GlobalKey<FormState>();
   final _addressController = TextEditingController();
@@ -29,60 +62,51 @@ class ConnectScreenState extends State<ConnectScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Connect")),
-      body: Wrap(
-        children: [
-          DropdownMenu<String>(
-            initialSelection: _selectedServer,
-            dropdownMenuEntries: [
-              for (var i = 0; i < connections.length; i++)
-                DropdownMenuEntry<String>(
-                  value: connections[i].id,
-                  label: connections[i].id,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownMenu<String>(
+                  initialSelection: _selectedServer,
+                  dropdownMenuEntries: [
+                    for (var i = 0; i < connections.length; i++)
+                      DropdownMenuEntry<String>(
+                        value: connections[i].id,
+                        label: connections[i].id,
+                        trailingIcon: DropdownConnectionButton(server: connections[i].id),
+                      ),
+                  ],
+                  onSelected: (String? id) {
+                    _selectedServer = id;
+                    if (id != null) {
+                      Prefs.setLastServer(StoredConnection.fromId(id));
+                    }
+                  },
+                  showTrailingIcon: true,
+                  trailingIcon: DropdownConnectionButton(server: _selectedServer),
                 ),
-            ],
-            onSelected: (String? id) {
-              _selectedServer = id;
-              if (id != null) {
-                Prefs.setLastServer(StoredConnection.fromId(id));
-              }
-            },
-          ),
-          ElevatedButton(
-            child: const Text("Connect"),
-            onPressed: () async {
-              if (_selectedServer != null) {
-                final connected = await Connection.tryConnect(
-                  StoredConnection.fromId(_selectedServer!),
-                );
-                if (!context.mounted) return;
-                if (connected) {
-                  Navigator.pushNamed(context, Routes.established);
-                  return;
-                }
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      if (Prefs.lastConnection?.id == _selectedServer) {
+                        Prefs.setLastServer(null);
+                      }
+                      if (_selectedServer != null) {
+                        Prefs.removeServer(StoredConnection.fromId(_selectedServer!));
+                      }
+                      _selectedServer = connections.firstOrNull?.id;
+                    });
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(
-                      child: Text("Failed to connect to server!"),
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_selectedServer == null) return;
-              if (Prefs.lastConnection?.id == _selectedServer) {
-                Prefs.setLastServer(null);
-              }
-              Prefs.removeServer(StoredConnection.fromId(_selectedServer!));
-              _selectedServer = connections.firstOrNull?.id;
-              setState(() {});
-            },
-            child: const Text("Delete"),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
