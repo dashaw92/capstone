@@ -5,8 +5,12 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 import 'crud.dart';
 import 'extractors.dart' as ffi;
 
+/// Implement the gRPC server service methods as defined by the protocol buffers definition (../pantry_protocol)
+/// Most functions are delegated to the "crud" object where database interaction is implemented.
 class PantryService extends PantryServiceBase {
+  //registered extractors found at startup
   final List<ffi.Extractor> extractors;
+  //A very creatively named object that provides the implementations for each of the following functions. crud.dart is exclusively linked to PostgreSQL operations.
   final crud = Crud();
 
   PantryService({required this.extractors});
@@ -15,22 +19,22 @@ class PantryService extends PantryServiceBase {
   Future<CreatedIngredientsResponse> createIngredients(
     ServiceCall call,
     CreateIngredientsRequest request,
-  ) async => await crud.createIngredients(request);
+  ) => crud.createIngredients(request);
 
   @override
   Future<Empty> deleteIngredient(
     ServiceCall call,
     DeleteIngredientRequest request,
-  ) async => await crud.deleteIngredient(request);
+  ) => crud.deleteIngredient(request);
 
   @override
   Future<ListIngredientsResponse> listIngredients(
     ServiceCall call,
     Empty request,
-  ) async => await crud.listIngredients();
+  ) => crud.listIngredients();
 
   @override
-  Future<Pong> ping(ServiceCall call, Empty request) async => await crud.ping();
+  Future<Pong> ping(ServiceCall call, Empty request) => crud.ping();
 
   @override
   Future<ExtractorExecutionResponse> executeExtractor(
@@ -51,6 +55,7 @@ class PantryService extends PantryServiceBase {
   }
 }
 
+// "interceptor" that provides the API call logging
 Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
   final time = DateTime.now();
   final client = call.clientMetadata ?? {};
@@ -63,12 +68,14 @@ Future<GrpcError?> logging(ServiceCall call, ServiceMethod method) async {
 }
 
 void main(List<String> args) async {
+  //Resolve all extractors from ../extractors
   final extractors = await ffi.initExtractors();
   final server = Server.create(
     services: [PantryService(extractors: extractors)],
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
     interceptors: [logging],
   );
+  //Starts the gRPC server. Program will run until the server is interrupted via ^C.
   await server.serve(port: 8080);
   print('Server started on port ${server.port}');
 }

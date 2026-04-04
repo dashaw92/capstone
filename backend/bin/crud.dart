@@ -4,6 +4,10 @@ import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart';
 
 import 'database.dart';
 
+// As implied by the name, this is code pertaining to the boring tasks: Creation, Reading, Updating, and Deletion of entities in the database.
+// The code assumes nothing will ever go wrong, so no error checking is implemented. If something as simple as writing a string to a table fails,
+// I don't think there's much more I can do besides permit the default behavior of printing a stacktrace.
+// This code serves as a bridge between gRPC types and Drift types.
 final class Crud {
   final _db = BackendDatabase();
 
