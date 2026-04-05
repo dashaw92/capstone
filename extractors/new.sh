@@ -1,7 +1,6 @@
 #!/bin/sh
 cargo new --lib "$1"
 cd "$1"
-cargo add dom_query
 cargo add --path ../extractors-sys
 cat << EOF >> Cargo.toml
 
