@@ -36,7 +36,11 @@ Future<List<String>?> runExtraction(
 ) async {
   final url = Uri.parse(recipe);
   final extractor = extractors
-      .where((ent) => url.host.toLowerCase().contains(ent.domain.toLowerCase()))
+      .where(
+        (ent) =>
+            url.host.toLowerCase().contains(ent.domain.toLowerCase()) ||
+            recipe.toLowerCase().startsWith(ent.domain.toLowerCase()),
+      )
       .firstOrNull;
 
   if (extractor == null) {
