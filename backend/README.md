@@ -30,4 +30,5 @@ This project defines the common API between the client and server. It is automat
 Extractors must be placed in the `./extractors` directory. Extractors may be symlinks to ease development iteration cycles. See `../extractors` for more information.
 
 ## Running  
+Either start the PostgreSQL container manually (see above) or run the `./start_all.sh` script.  
 Once the PostgreSQL container is running, starting the server can be achieved with the `dart run` command in this directory. The server is hardcoded to listen on port `8080`. Extractors will be registered upon startup and logged to output with their corresponding URLs. Live API calls will be logged as clients interact with the server. To terminate the server, just press `^C` in the running process.
