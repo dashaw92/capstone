@@ -1,6 +1,6 @@
 ## Extractors
 Extractors are shared libraries (dll, so, dylib) that extract ingredients from
-recipe websites. Each extractor is responisble for functioning against one
+recipe websites. Each extractor is responsible for functioning against one
 recipe site.
 
 ### Interface
