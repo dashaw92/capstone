@@ -99,53 +99,56 @@ class _EstablishedConnectionScreenState
                       future: _extractorResponse,
                       builder: (context, state) {
                         if (state.hasData) {
-                          return Table(
-                            border: TableBorder.all(),
-                            defaultVerticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            columnWidths: {
-                              0: IntrinsicColumnWidth(),
-                              1: FlexColumnWidth(),
-                            },
-                            children: <TableRow>[
-                              TableRow(
-                                children: [
-                                  const Checkbox(value: true, onChanged: null),
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 16.0),
-                                    child: Text(
-                                      "Ingredient",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              for (var ingredient in state.data!.ingredients)
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Table(
+                              border: TableBorder.all(),
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              columnWidths: {
+                                0: IntrinsicColumnWidth(),
+                                1: FlexColumnWidth(),
+                              },
+                              children: <TableRow>[
                                 TableRow(
                                   children: [
-                                    Checkbox(
-                                      value: haveIngredient(ingredient) || knownIngredients.contains(ingredient),
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          if (value ?? true) {
-                                            knownIngredients.add(ingredient);
-                                          } else {
-                                            knownIngredients.remove(ingredient);
-                                          }
-                                        });
-                                      },
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 16.0,
+                                    const Checkbox(value: true, onChanged: null),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 16.0),
+                                      child: Text(
+                                        "Ingredient",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                        ),
                                       ),
-                                      child: Text(ingredient),
                                     ),
                                   ],
                                 ),
-                            ],
+                                for (var ingredient in state.data!.ingredients)
+                                  TableRow(
+                                    children: [
+                                      Checkbox(
+                                        value: haveIngredient(ingredient) || knownIngredients.contains(ingredient),
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            if (value ?? true) {
+                                              knownIngredients.add(ingredient);
+                                            } else {
+                                              knownIngredients.remove(ingredient);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                        ),
+                                        child: Text(ingredient),
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           );
                         } else {
                           return CircularProgressIndicator();

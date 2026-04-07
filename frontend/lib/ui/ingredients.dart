@@ -36,7 +36,7 @@ class _IngredientsState extends State<IngredientsScreen> {
                   itemCount: state.data!.ingredients.length,
                   itemBuilder: (context, idx) {
                     final item = state.data!.ingredients[idx];
-                    return Row(
+                    Widget child =  Row(
                       children: [
                         Flexible(
                           child: ListTile(
@@ -57,6 +57,18 @@ class _IngredientsState extends State<IngredientsScreen> {
                         ),
                       ],
                     );
+
+
+                    // Add bottom padding to the final list entry so the
+                    // "Add new ingredient" button doesn't obscure any content.
+                    if (idx == state.data!.ingredients.length - 1) {
+                      child = Padding(
+                        padding: EdgeInsetsGeometry.only(bottom: 64.0),
+                        child: child,
+                      );
+                    }
+
+                    return child;
                   },
                 );
               } else {
